@@ -524,15 +524,6 @@
       <div id="nav-container" class="space-y-5"></div>
     </div>
 
-    <div class="p-4 border-t border-white/10 sidebar-section">
-      <div class="rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 p-4">
-        <div class="flex items-center gap-2 text-sm font-semibold text-white">
-          <span class="material-symbols-outlined text-sky-300">workspace_premium</span>
-          Prostate Cancer Focus
-        </div>
-        <p class="text-xs leading-relaxed text-blue-100/75 mt-2">This module is focused on metastatic castration-resistant prostate cancer and PARP inhibitor combination treatments.</p>
-      </div>
-    </div>
   </aside>
 
 
@@ -553,7 +544,7 @@
               <span class="material-symbols-outlined">menu</span>
             </button>
             <div class="min-w-0">
-              <div class="text-[11px] uppercase tracking-[0.22em] text-slate-500 font-semibold">Metastatic Prostate Cancer and PARPi Combination Treatments</div>
+              <div class="text-[11px] uppercase tracking-[0.22em] text-slate-500 font-semibold">PARP Inhibitors in Metastatic Prostate Cancer</div>
               <div class="flex items-center gap-2 text-sm md:text-base mt-1 min-w-0">
                 <span id="breadcrumb-module" class="font-black text-slate-900 truncate">Module</span>
                 <span class="material-symbols-outlined text-blue-600 text-[18px]">chevron_right</span>
@@ -582,34 +573,34 @@
     const appData = {
         modules: {
             'gap-1': {
-                title: 'Gap 1: Biomarker Testing',
+                title: 'HRR Testing and Diagnostic Workflow',
                 color: 'blue',
                 sections: [
-                    { id: 'intro', title: 'The Testing Deficit', icon: 'visibility_off' },
-                    { id: 'guidelines', title: 'Clinical Guidelines', icon: 'menu_book' },
+                    { id: 'intro', title: '', icon: 'biotech' },
+                    { id: 'guidelines', title: 'Guidelines and Workflow Actions', icon: 'menu_book' },
                     { id: 'case-marcus', title: 'Case Study: Marcus', icon: 'person' },
                 ]
             },
             'gap-2': {
-                title: 'Gap 2: Agent Selection',
+                title: 'PARPi Efficacy, Sequencing, and Shared Decisions',
                 color: 'purple',
                 sections: [
-                    { id: 'intro', title: 'Targeted Uncertainty', icon: 'question_mark' },
-                    { id: 'pathways', title: 'Treatment Pathways', icon: 'alt_route' },
+                    { id: 'intro', title: 'Targeted Therapy Gap', icon: 'target' },
+                    { id: 'pathways', title: 'Treatment Landscape', icon: 'alt_route' },
                     { id: 'case-arthur', title: 'Case Study: Arthur', icon: 'engineering' },
                 ]
             },
             'gap-3': {
-                title: 'Gap 3: Toxicity Mitigation',
+                title: 'AE Management Through the MDT',
                 color: 'rose',
                 sections: [
-                    { id: 'intro', title: 'Adverse Events', icon: 'warning' },
+                    { id: 'intro', title: 'Adverse Event Management', icon: 'warning' },
                     { id: 'mdt', title: 'MDT Coordination', icon: 'groups' },
                     { id: 'case-james', title: 'Case Study: James', icon: 'account_circle' },
                 ]
             },
             'resources': {
-                title: 'Resources',
+                title: 'Summary',
                 color: 'indigo',
                 sections: [
                     { id: 'summary', title: 'Clinical Takeaways', icon: 'fact_check' },
@@ -765,340 +756,544 @@
 
     function getSectionContent(moduleId, sectionId) {
         if (moduleId === 'gap-1') {
-            if (sectionId === 'intro') return `${renderHero('gap-1', 'Practice Gap 1', 'Optimizing HRR testing and closing the precision gap.', 'Genetic testing is not systematically conducted in real-world diagnosis of mCRPC, leading to prolonged use of ineffective, untargeted treatments.', [{ label: 'Receive no testing', value: '40.8%', copy: 'Nearly half of patients still receive neither germline nor somatic testing.' }, { label: 'Median delay', value: '16.9 Mo.', copy: 'Time between mCRPC diagnosis and the first biomarker test in the content.' }, { label: 'Clinical priority', value: 'Test early', copy: 'Concurrent germline and somatic testing should happen at diagnosis.' }])}<section class="section-shell"><div class="space-y-6 max-w-4xl mx-auto slide-up">
-                    <div class="relative hero-card overflow-hidden h-64 md:h-72 group">
-                        <div class="absolute inset-0 bg-gradient-to-r from-blue-900 to-indigo-900 p-8 flex flex-col justify-center z-10">
-                            <div class="text-[10px] font-bold text-blue-300 tracking-widest uppercase mb-2">Practice Gap 1</div>
-                            <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Optimizing HRR Testing</h1>
-                            <p class="text-blue-100 text-lg max-w-xl">Genetic testing is not systematically conducted in real-world diagnosis of mCRPC, leading to the extended use of ineffective, untargeted treatments.</p>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                        <div class="stat-card p-6">
-                            <div class="text-4xl font-black text-blue-600 mb-2">40.8%</div>
-                            <h3 class="font-bold text-slate-800 mb-2">Receive No Testing</h3>
-                            <p class="text-sm text-slate-600">Nearly half of all patients with mCRPC receive neither germline nor somatic testing (Shore 2024).</p>
-                        </div>
-                        <div class="stat-card p-6">
-                            <div class="text-4xl font-black text-rose-500 mb-2">16.9 Mo.</div>
-                            <h3 class="font-bold text-slate-800 mb-2">Delay to First Test</h3>
-                            <p class="text-sm text-slate-600">The median time elapsed between mCRPC diagnosis and the very first biomarker test (George 2024).</p>
-                        </div>
-                    </div>
+            if (sectionId === 'intro') return `
+                ${renderHero(
+                    'gap-1',
+                    'HRR Testing and Diagnostic Workflow',
+                    'Close the HRR testing gap earlier in metastatic prostate cancer.',
+                    '',
+                    [
+                        { label: 'No testing', value: '40%', copy: 'About 40% of patients still do not receive genetic testing in practice.' },
+                        { label: 'Delay to testing', value: '16 Mo.', copy: 'Testing is often delayed well beyond the ideal treatment decision window.' },
+                        { label: 'At diagnosis', value: 'Test now', copy: 'Guidelines emphasize germline and somatic testing early in the metastatic workflow.' }
+                    ]
+                )}
+                <section class="section-shell">
+                    <div class="space-y-6 max-w-4xl mx-auto slide-up">
+                        ${renderSectionHeader('gap-1', 'What changed in the updated needs assessment', 'The updated document emphasizes metastatic prostate cancer overall, not just mCRPC, and makes HRR testing a core diagnostic workflow issue tied directly to treatment timing, patient counseling, and multidisciplinary care.', 'Assessment Update')}
 
-                    <div class="stat-card p-6">
-                        <h2 class="text-xl font-bold text-slate-900 mb-4">The Disparity Gap</h2>
-                        <p class="text-slate-600 leading-relaxed mb-4">Disparities in testing access compound the magnitude of this gap. Real-world data demonstrates that older age, race (specifically Black men, who bear a 67% higher incidence rate), community practice setting, and lower socioeconomic status are independently associated with lower testing rates.</p>
-                    </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="stat-card">
+                                <div class="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-bold">Testing gap</div>
+                                <div class="text-3xl font-black text-slate-900 mt-2">40%</div>
+                                <p class="text-sm text-slate-600 mt-3 leading-relaxed">Many patients still do not receive germline or somatic testing despite clear actionability implications.</p>
+                            </div>
+                            <div class="stat-card">
+                                <div class="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-bold">Workflow lag</div>
+                                <div class="text-3xl font-black text-slate-900 mt-2">16 months</div>
+                                <p class="text-sm text-slate-600 mt-3 leading-relaxed">A long delay from diagnosis to first biomarker testing can leave patients on untargeted therapy too long.</p>
+                            </div>
+                            <div class="stat-card">
+                                <div class="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-bold">Clinical imperative</div>
+                                <div class="text-3xl font-black text-slate-900 mt-2">Act early</div>
+                                <p class="text-sm text-slate-600 mt-3 leading-relaxed">Testing should support risk stratification, treatment planning, and family risk discussions from the start.</p>
+                            </div>
+                        </div>
 
-                    <div class="flex justify-end pt-4">
-                        <button onclick="navigateTo('gap-1', 'guidelines')" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md hover:-translate-y-0.5">
-                            View Guidelines <span class="material-symbols-outlined">arrow_forward</span>
-                        </button>
+                        <div class="feature-card">
+                            <h3 class="text-xl font-black text-slate-900 mb-3">Where the gap shows up</h3>
+                            <div class="space-y-3 text-slate-600 leading-relaxed">
+                                <p>Patients in community settings remain less likely to receive timely HRR testing, and disparities tied to age, race, and socioeconomic status continue to affect access.</p>
+                                <p>The updated assessment also pulls mCSPC into the discussion, noting that early testing matters because metastatic disease can evolve quickly and may require biomarker-directed treatment later in the pathway.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end pt-2">
+                            <button onclick="navigateTo('gap-1', 'guidelines')" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md hover:-translate-y-0.5">
+                                View workflow actions <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
+                        </div>
                     </div>
-                </div>`;
+                </section>`;
 
             if (sectionId === 'guidelines') return `
-                <section class="section-shell slide-up"><div class="space-y-6 max-w-4xl mx-auto">
-                   <h2 class="text-2xl font-bold text-slate-900 mb-2">Guideline Concordant Workflows</h2>
-                   <p class="text-slate-600 mb-6">Multiple major professional societies have issued robust and concordant recommendations establishing testing as a standard of care.</p>
-                   
-                   <div class="bg-white rounded-xl shadow-sm border-l-4 border-l-blue-600 p-6 mb-4">
-                       <h3 class="font-bold text-lg text-slate-900 mb-2 flex items-center gap-2">
-                           <span class="material-symbols-outlined text-blue-600">verified</span> NCCN & ASCO Directives
-                       </h3>
-                       <p class="text-slate-700 leading-relaxed">Both NCCN (2026) and ASCO (2025) recommend that <strong>ALL patients with mCRPC should undergo concurrent germline and somatic HRR testing at diagnosis</strong> to enable biomarker-directed therapy selection.</p>
-                   </div>
+                <section class="section-shell slide-up">
+                    <div class="space-y-6 max-w-4xl mx-auto">
+                        ${renderSectionHeader('gap-1', 'Guideline and workflow priorities', 'The updated assessment highlights concordant guidance from NCCN, ASCO, and ESMO: clinicians need to recognize who should be tested, when testing should happen, what panels are needed, and how to act on the results.', 'Clinical Workflow')}
 
-                   <h3 class="font-bold text-lg text-slate-900 mt-8 mb-4">Implementation Strategies</h3>
-                   <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 hover:border-blue-300 transition-colors">
-                       <div class="p-2 bg-blue-50 w-fit rounded-lg text-blue-600 mb-3"><span class="material-symbols-outlined">notification_important</span></div>
-                       <h4 class="font-bold text-sm text-slate-800 mb-2">EHR Alerts</h4>
-                       <p class="text-xs text-slate-500">Integrate standing orders that prompt HRR testing at defined clinical milestones like initial mCRPC diagnosis.</p>
-                     </div>
-                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 hover:border-blue-300 transition-colors">
-                       <div class="p-2 bg-indigo-50 w-fit rounded-lg text-indigo-600 mb-3"><span class="material-symbols-outlined">bloodtype</span></div>
-                       <h4 class="font-bold text-sm text-slate-800 mb-2">Liquid Biopsy (ctDNA)</h4>
-                       <p class="text-xs text-slate-500">Reduces logistical barriers associated with tissue acquisition, especially in patients with bone-only metastasis.</p>
-                     </div>
-                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 hover:border-blue-300 transition-colors">
-                       <div class="p-2 bg-emerald-50 w-fit rounded-lg text-emerald-600 mb-3"><span class="material-symbols-outlined">video_camera_front</span></div>
-                       <h4 class="font-bold text-sm text-slate-800 mb-2">Telegenetics</h4>
-                       <p class="text-xs text-slate-500">Expansion of consultation models allows community practices to access genetic counselor expertise remotely.</p>
-                     </div>
-                   </div>
+                        <div class="feature-card">
+                            <h3 class="text-xl font-black text-slate-900 mb-4">Core testing principles</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="rounded-2xl border border-slate-200 bg-white p-5">
+                                    <div class="pill mb-3">Test at diagnosis</div>
+                                    <p class="text-sm text-slate-600 leading-relaxed">For metastatic prostate cancer, germline and somatic genomic testing should be built into the initial diagnostic workflow, not saved for the last line of therapy.</p>
+                                </div>
+                                <div class="rounded-2xl border border-slate-200 bg-white p-5">
+                                    <div class="pill mb-3">Use multigene panels</div>
+                                    <p class="text-sm text-slate-600 leading-relaxed">The updated assessment calls out BRCA1, BRCA2, ATM, PALB2, CHEK2, CDK12 and other HRR alterations, while reminding clinicians not to confuse prognostic markers with predictive biomarkers.</p>
+                                </div>
+                                <div class="rounded-2xl border border-slate-200 bg-white p-5">
+                                    <div class="pill mb-3">Counsel and educate</div>
+                                    <p class="text-sm text-slate-600 leading-relaxed">Genetic counseling and patient education are part of the testing workflow because results can affect therapy decisions and family risk assessment.</p>
+                                </div>
+                                <div class="rounded-2xl border border-slate-200 bg-white p-5">
+                                    <div class="pill mb-3">Retest when needed</div>
+                                    <p class="text-sm text-slate-600 leading-relaxed">If prior results were negative, incomplete, or clinically outdated, repeat evaluation at disease progression may reveal new actionable findings.</p>
+                                </div>
+                            </div>
+                        </div>
 
-                   <div class="flex justify-between pt-6">
-                        <button onclick="navigateTo('gap-1', 'intro')" class="text-slate-500 hover:text-blue-600 font-medium flex items-center gap-2"><span class="material-symbols-outlined">arrow_back</span> Back</button>
-                        <button onclick="navigateTo('gap-1', 'case-marcus')" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2">Apply to Case <span class="material-symbols-outlined">arrow_forward</span></button>
-                   </div>
-                </div>`;
-            
-            if (sectionId === 'case-marcus') return `
-                <section class="section-shell slide-up"><div class="space-y-6 max-w-4xl mx-auto">
-                    <div class="flex items-center justify-between"><h2 class="text-2xl font-bold text-slate-900">Case Study: Marcus</h2><span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase tracking-wide">Interactive</span></div>
-                    <div class="stat-card p-6">
-                        
-<div class="flex gap-4 mb-6">
-    <div class="w-12 h-12 bg-slate-100 rounded-full flex-shrink-0 flex items-center justify-center text-xl text-slate-600 font-bold">
-        M
-    </div>
-    <div>
-        <h3 class="font-bold text-lg text-slate-800">Patient Profile</h3>
-        <p class="text-slate-600">Marcus is a 68-year-old Black man with newly diagnosed mCRPC.</p>
-    </div>
-</div>
-                        
-${renderClinicalVideoBlock('marcus', 'Marcus Consult', 'marcus.png', 'placeholder.mp4', "Clinical Interaction: Marcus's PSA is rising. He is highly anxious and wants to start the 'new targeted pills' immediately without waiting for more lab work.", { posterMaxClass: 'max-h-[360px] mx-auto object-cover' })}
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="feature-card">
+                                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3"><span class="material-symbols-outlined">notification_important</span></div>
+                                <h4 class="font-bold text-slate-900 mb-2">Defined milestones</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">Trigger testing automatically at metastatic diagnosis and again when progression could change therapy selection.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3"><span class="material-symbols-outlined">bloodtype</span></div>
+                                <h4 class="font-bold text-slate-900 mb-2">Use practical access points</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">Liquid biopsy and remote genetics support can reduce friction when tissue, geography, or staffing become barriers.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3"><span class="material-symbols-outlined">conversion_path</span></div>
+                                <h4 class="font-bold text-slate-900 mb-2">Translate results to action</h4>
+                                <p class="text-sm text-slate-600 leading-relaxed">The goal is not testing for its own sake. The goal is fast interpretation, patient counseling, and timely biomarker-based selection.</p>
+                            </div>
+                        </div>
 
-                        <div class="space-y-3 bg-slate-50 p-5 rounded-lg border border-slate-100 text-sm mt-6">
-                            <p><strong class="text-slate-900">Patient Request:</strong> "Can we skip the genetic testing? I don't want to wait."</p>
-                            <p><strong class="text-slate-900">Chart Review:</strong> No prior somatic or germline testing on record.</p>
+                        <div class="flex justify-between pt-4">
+                            <button onclick="navigateTo('gap-1', 'intro')" class="text-slate-500 hover:text-blue-600 font-medium flex items-center gap-2">
+                                <span class="material-symbols-outlined">arrow_back</span> Back
+                            </button>
+                            <button onclick="navigateTo('gap-1', 'case-marcus')" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2">
+                                Apply to case <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
                         </div>
                     </div>
+                </section>`;
 
-                    ${renderQuizComponent('quiz-marcus', "According to NCCN and ASCO guidelines, what is the most appropriate next step for Marcus?", [
-                        "Order somatic tumor testing only; germline testing is only needed if a mutation is found.",
-                        "Order concurrent germline multigene testing and somatic tumor sequencing immediately at diagnosis.",
-                        "Delay testing until after the patient progresses on first-line novel hormonal therapy."
-                    ], 1, "Correct! All patients with mCRPC should undergo concurrent germline and somatic HRR testing at diagnosis. Delaying testing means missing the opportunity for Category 1 PARPi therapies.")}
-                    
-                    <div class="flex justify-end pt-4"><button onclick="navigateTo('gap-2', 'intro')" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition flex items-center gap-2">Start Module 2 <span class="material-symbols-outlined">arrow_forward</span></button></div>
-                </div>`;
+            if (sectionId === 'case-marcus') return `
+                <section class="section-shell slide-up">
+                    <div class="space-y-6 max-w-4xl mx-auto">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-2xl font-bold text-slate-900">Case Study: Marcus</h2>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase tracking-wide">Interactive</span>
+                        </div>
+
+                        <div class="stat-card p-6">
+                            <div class="flex gap-4 mb-6">
+                                <div class="w-12 h-12 bg-slate-100 rounded-full flex-shrink-0 flex items-center justify-center text-xl text-slate-600 font-bold">M</div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-slate-800">Patient profile</h3>
+                                    <p class="text-slate-600">Marcus is a 68-year-old man in a community practice setting with newly metastatic prostate cancer and no documented germline or somatic HRR testing.</p>
+                                </div>
+                            </div>
+
+                            ${renderClinicalVideoBlock('marcus', 'Marcus Consult', 'marcus.png', 'placeholder.mp4', "Clinical interaction: Marcus is anxious to begin treatment immediately and asks whether genomic testing can wait until later.", { posterMaxClass: 'max-h-[360px] mx-auto object-cover' })}
+
+                            <div class="space-y-3 bg-slate-50 p-5 rounded-lg border border-slate-100 text-sm">
+                                <p><strong class="text-slate-900">Clinical situation:</strong> He is symptomatic, anxious to start treatment, and asks whether testing can wait until later if therapy is started today.</p>
+                                <p><strong class="text-slate-900">Workflow concern:</strong> His team worries testing may slow care, even though results may directly affect present and future treatment selection.</p>
+                                <p><strong class="text-slate-900">Teaching point:</strong> The updated needs assessment treats testing as part of the treatment pathway, not as a separate optional referral.</p>
+                            </div>
+                        </div>
+
+                        ${renderQuizComponent(
+                            'quiz-marcus',
+                            'What is the best next step for Marcus?',
+                            [
+                                'Defer genomic testing until he becomes castration resistant so treatment can begin now.',
+                                'Order concurrent germline and somatic testing now while starting guideline-based care and planning for biomarker-directed decisions.',
+                                'Order somatic testing only because germline findings are not important for prostate cancer management.'
+                            ],
+                            1,
+                            'Correct. The updated assessment emphasizes that HRR testing belongs in the metastatic diagnostic workflow. Concurrent germline and somatic testing supports precision treatment planning, counseling, and later sequencing decisions.'
+                        )}
+
+                        <div class="flex justify-end pt-2">
+                            <button onclick="navigateTo('gap-2', 'intro')" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition flex items-center gap-2">
+                                Start module 2 <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>`;
         }
 
         if (moduleId === 'gap-2') {
-             if (sectionId === 'intro') return `
-                <section class="section-shell slide-up"><div class="space-y-6 max-w-4xl mx-auto">
-                    <div class="bg-gradient-to-r from-purple-700 to-indigo-800 rounded-2xl p-8 text-white shadow-lg mb-6">
-                        <div class="text-[10px] font-bold text-purple-300 tracking-widest uppercase mb-2">Practice Gap 2</div>
-                        <h1 class="text-3xl font-bold mb-3">Targeted Selection Uncertainty</h1>
-                        <p class="text-purple-100 text-lg">Guideline-recommended, biomarker-targeted treatments are not being universally selected in real-world settings.</p>
-                    </div>
-
-                    <div class="content-card p-8">
-                        <div class="flex items-center gap-4 mb-6">
-                            <div class="text-5xl font-black text-purple-600">58.4%</div>
-                            <div class="text-sm text-slate-600 font-medium">Of HRRm-positive patients receive a guideline-recommended PARPi. Nearly half are missing out on precision therapy.</div>
+            if (sectionId === 'intro') return `
+                ${renderHero(
+                    'gap-2',
+                    'PARPi Efficacy, Sequencing, and Shared Decisions',
+                    'Move from testing to confident PARPi selection and sequencing.',
+                    'The new needs assessment expands the educational scope beyond a single mCRPC decision point. Clinicians need current efficacy and safety data, clearer treatment sequencing logic, and stronger patient communication skills across both mCSPC and mCRPC.',
+                    [
+                        { label: 'HRRm-positive treated', value: '58.4%', copy: 'A major share of HRRm-positive patients still do not receive PARPi therapy.' },
+                        { label: 'Broader scope', value: 'mCSPC + mCRPC', copy: 'The update now includes earlier disease state evidence and evolving combination strategies.' },
+                        { label: 'Decision focus', value: 'Sequence well', copy: 'Biomarker status, prior therapy, and patient factors all matter.' }
+                    ]
+                )}
+                <section class="section-shell">
+                    <div class="space-y-6 max-w-4xl mx-auto slide-up">
+                        <div class="feature-card">
+                            <h3 class="text-xl font-black text-slate-900 mb-3">Why this gap matters now</h3>
+                            <p class="text-slate-600 leading-relaxed">The updated assessment emphasizes that clinicians remain unsure about when to use PARPi combinations, which patients are the strongest candidates, and how to discuss benefits, tradeoffs, and trial participation with patients. That uncertainty delays biomarker-directed care even after actionable testing is available.</p>
                         </div>
 
-                        <h2 class="text-xl font-bold text-slate-900 mb-4">The Challenge</h2>
-                        <p class="text-slate-700 leading-relaxed mb-4">Clinicians face persistent uncertainty regarding agent selection across mutation subtypes (BRCA vs. non-BRCA) and optimal treatment sequencing. The FDA approval of four different PARPi regimens requires careful integration of biomarker status and prior treatment history.</p>
-                    </div>
-
-                    <div class="flex justify-end pt-4"><button onclick="navigateTo('gap-2', 'pathways')" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition flex items-center gap-2">View Treatment Pathways <span class="material-symbols-outlined">arrow_forward</span></button></div>
-                </div>`;
-                
-             if (sectionId === 'pathways') return `
-                <section class="section-shell slide-up"><div class="space-y-6 max-w-4xl mx-auto">
-                    <h2 class="text-2xl font-bold text-slate-900">Treatment Pathways & Efficacy</h2>
-                    <p class="text-slate-600 mb-6">Biomarker status governs agent selection. Pay close attention to the target populations derived from recent phase 3 trials.</p>
-
-                    <div class="space-y-4">
-                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col md:flex-row gap-4 items-start md:items-center">
-                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 min-w-[140px] text-center">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Trial</span>
-                                <span class="font-black text-slate-800">PROpel</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="stat-card">
+                                <div class="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-bold">Therapy gap</div>
+                                <div class="text-3xl font-black text-slate-900 mt-2">Underused</div>
+                                <p class="text-sm text-slate-600 mt-3 leading-relaxed">Even among patients with actionable HRR alterations, PARPi-based treatment is still not used consistently.</p>
                             </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-slate-900 text-lg">Olaparib + Abiraterone</h4>
-                                <p class="text-sm text-slate-600 mt-1">Post-hoc analysis showed substantial OS benefit in the BRCA-mutated subgroup. Approved and Category 1 for <strong>BRCAm mCRPC</strong> (pre-ARPI).</p>
+                            <div class="stat-card">
+                                <div class="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-bold">Communication need</div>
+                                <div class="text-3xl font-black text-slate-900 mt-2">Shared decisions</div>
+                                <p class="text-sm text-slate-600 mt-3 leading-relaxed">The new assessment adds explicit emphasis on patient education, decision quality, and clinical trial discussions.</p>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col md:flex-row gap-4 items-start md:items-center">
-                            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 min-w-[140px] text-center">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Trial</span>
-                                <span class="font-black text-slate-800">MAGNITUDE</span>
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-slate-900 text-lg">Niraparib + Abiraterone</h4>
-                                <p class="text-sm text-slate-600 mt-1">Pronounced rPFS benefit in BRCAm subgroup. Futility declared in non-HRRm. Category 1 for <strong>BRCAm mCRPC</strong>.</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-purple-50 rounded-xl shadow-sm border border-purple-200 p-5 flex flex-col md:flex-row gap-4 items-start md:items-center relative overflow-hidden">
-                            <div class="absolute right-0 top-0 w-2 h-full bg-purple-500"></div>
-                            <div class="bg-white p-3 rounded-lg border border-purple-100 min-w-[140px] text-center shadow-sm">
-                                <span class="text-xs font-bold text-purple-400 uppercase tracking-wider block mb-1">Trial</span>
-                                <span class="font-black text-purple-900">TALAPRO-2</span>
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-purple-900 text-lg">Talazoparib + Enzalutamide</h4>
-                                <p class="text-sm text-purple-800 mt-1">Statistically significant OS improvement across cohorts. The <strong>ONLY</strong> PARPi-based regimen with a Category 1 recommendation for the broader <strong>HRRm population (both BRCA and non-BRCA)</strong>.</p>
-                            </div>
+                        <div class="flex justify-end pt-2">
+                            <button onclick="navigateTo('gap-2', 'pathways')" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition flex items-center gap-2">
+                                View treatment landscape <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
                         </div>
                     </div>
+                </section>`;
 
-                    <div class="flex justify-between pt-6"><button onclick="navigateTo('gap-2', 'intro')" class="text-slate-500 hover:text-purple-600 font-medium flex items-center gap-2"><span class="material-symbols-outlined">arrow_back</span> Back</button><button onclick="navigateTo('gap-2', 'case-arthur')" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition flex items-center gap-2">Apply to Case <span class="material-symbols-outlined">arrow_forward</span></button></div>
-                </div>`;
-                
-             if (sectionId === 'case-arthur') return `
-                <section class="section-shell slide-up"><div class="space-y-6 max-w-4xl mx-auto">
-                    <div class="flex items-center justify-between"><h2 class="text-2xl font-bold text-slate-900">Case Study: Arthur</h2><span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold uppercase tracking-wide">Interactive</span></div>
-                    
-                    <div class="stat-card p-6">
-                        <div class="flex gap-4 mb-6"><div class="w-12 h-12 bg-slate-100 rounded-full flex-shrink-0 flex items-center justify-center text-xl text-slate-600 font-bold">A</div><div><h3 class="font-bold text-lg text-slate-800">Patient Profile</h3><p class="text-slate-600">Arthur is a 72-year-old with mCRPC progressing on an ARPI.</p></div></div>
-                        
-                        ${renderClinicalVideoBlock('arthur', 'Arthur Consult', 'arthur.png', 'placeholder.mp4', "Clinical Interaction: Arthur's somatic testing just returned. He reads the report showing an ATM mutation (a non-BRCA HRR mutation).", { posterMaxClass: 'max-h-[360px] mx-auto object-cover' })}
+            if (sectionId === 'pathways') return `
+                <section class="section-shell slide-up">
+                    <div class="space-y-6 max-w-4xl mx-auto">
+                        ${renderSectionHeader('gap-2', 'Updated treatment landscape', 'The revised needs assessment now clearly spans metastatic castration-sensitive and metastatic castration-resistant prostate cancer. It also sharpens the teaching around mutation-specific benefit, trial interpretation, and sequencing decisions.', 'Evidence Update')}
 
-                        <div class="space-y-3 bg-slate-50 p-5 rounded-lg border border-slate-100 text-sm mt-6">
-                            <p><strong class="text-slate-900">Genomic Profile:</strong> ATM mutation detected. BRCA1/2 are wild-type.</p>
-                            <p><strong class="text-slate-900">Patient Comment:</strong> "I read online that these new PARP inhibitors only work for BRCA. Does this mean I have no targeted options?"</p>
+                        <div class="space-y-4">
+                            <div class="feature-card">
+                                <div class="flex flex-col md:flex-row md:items-start gap-4">
+                                    <div class="min-w-[130px] rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
+                                        <div class="text-xs uppercase tracking-[0.18em] text-slate-500 font-bold">mCSPC</div>
+                                        <div class="text-lg font-black text-slate-900 mt-1">AMPLITUDE</div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-black text-slate-900 text-lg">Niraparib + abiraterone</h3>
+                                        <p class="text-sm text-slate-600 mt-2 leading-relaxed">The update adds the 2025 approval context for BRCA2-mutated mCSPC and highlights radiographic progression-free survival benefit when PARPi therapy is brought earlier into the metastatic course.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="flex flex-col md:flex-row md:items-start gap-4">
+                                    <div class="min-w-[130px] rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
+                                        <div class="text-xs uppercase tracking-[0.18em] text-slate-500 font-bold">mCSPC</div>
+                                        <div class="text-lg font-black text-slate-900 mt-1">TALAPRO-3</div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-black text-slate-900 text-lg">Talazoparib + enzalutamide</h3>
+                                        <p class="text-sm text-slate-600 mt-2 leading-relaxed">Recently published data showed significant radiographic progression-free survival improvement in HRR-altered mCSPC, while overall survival remains immature.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="feature-card border-purple-200 bg-purple-50/60">
+                                <div class="flex flex-col md:flex-row md:items-start gap-4">
+                                    <div class="min-w-[130px] rounded-2xl border border-purple-200 bg-white p-4 text-center">
+                                        <div class="text-xs uppercase tracking-[0.18em] text-purple-500 font-bold">mCRPC</div>
+                                        <div class="text-lg font-black text-purple-900 mt-1">TALAPRO-2</div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-black text-purple-900 text-lg">Talazoparib + enzalutamide</h3>
+                                        <p class="text-sm text-purple-900/80 mt-2 leading-relaxed">This remains the standout regimen for broad HRR-mutated disease because the updated assessment notes it is the only regimen with a Category 1 NCCN recommendation for both BRCA and non-BRCA HRRm mCRPC populations.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="flex flex-col md:flex-row md:items-start gap-4">
+                                    <div class="min-w-[130px] rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
+                                        <div class="text-xs uppercase tracking-[0.18em] text-slate-500 font-bold">mCRPC</div>
+                                        <div class="text-lg font-black text-slate-900 mt-1">MAGNITUDE</div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-black text-slate-900 text-lg">Niraparib + abiraterone</h3>
+                                        <p class="text-sm text-slate-600 mt-2 leading-relaxed">The benefit signal is strongest in BRCA-mutated disease, while the updated assessment notes no radiographic progression-free survival improvement in the non-BRCA HRR subgroup.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="flex flex-col md:flex-row md:items-start gap-4">
+                                    <div class="min-w-[130px] rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
+                                        <div class="text-xs uppercase tracking-[0.18em] text-slate-500 font-bold">mCRPC</div>
+                                        <div class="text-lg font-black text-slate-900 mt-1">PROpel</div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="font-black text-slate-900 text-lg">Olaparib + abiraterone</h3>
+                                        <p class="text-sm text-slate-600 mt-2 leading-relaxed">The updated content emphasizes the stronger signal in the BRCA-mutated subgroup and reminds learners that overall survival benefit was not statistically significant in the full intention-to-treat population.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="feature-card">
+                            <h3 class="text-xl font-black text-slate-900 mb-3">Sequencing principles in the new assessment</h3>
+                            <ul class="space-y-3 text-sm text-slate-600 leading-relaxed">
+                                <li>Use biomarker status, prior therapy, disease state, and patient factors together instead of relying on a single rule.</li>
+                                <li>Recognize that BRCA and non-BRCA HRR alterations do not behave identically.</li>
+                                <li>Re-testing may be appropriate when earlier results were negative, incomplete, or no longer clinically informative.</li>
+                                <li>Patient education and shared decision-making are part of therapy selection, especially when QoL tradeoffs or trial participation are on the table.</li>
+                            </ul>
+                        </div>
+
+                        <div class="flex justify-between pt-4">
+                            <button onclick="navigateTo('gap-2', 'intro')" class="text-slate-500 hover:text-purple-600 font-medium flex items-center gap-2">
+                                <span class="material-symbols-outlined">arrow_back</span> Back
+                            </button>
+                            <button onclick="navigateTo('gap-2', 'case-arthur')" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition flex items-center gap-2">
+                                Apply to case <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
                         </div>
                     </div>
+                </section>`;
 
-                    ${renderQuizComponent('quiz-arthur', "Which PARPi-based regimen is uniquely positioned with a Category 1 NCCN recommendation for Arthur's broader (non-BRCA) HRRm profile?", [
-                        "Olaparib + Abiraterone",
-                        "Talazoparib + Enzalutamide",
-                        "Niraparib + Abiraterone"
-                    ], 1, "Correct! Talazoparib plus enzalutamide is the only regimen with a Category 1 recommendation encompassing both BRCA and non-BRCA HRR-mutated disease (like ATM), based on the TALAPRO-2 trial.")}
-                    
-                    <div class="flex justify-end pt-4"><button onclick="navigateTo('gap-3', 'intro')" class="bg-rose-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-rose-700 transition flex items-center gap-2">Start Module 3 <span class="material-symbols-outlined">arrow_forward</span></button></div>
-                </div>`;
+            if (sectionId === 'case-arthur') return `
+                <section class="section-shell slide-up">
+                    <div class="space-y-6 max-w-4xl mx-auto">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-2xl font-bold text-slate-900">Case Study: Arthur</h2>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold uppercase tracking-wide">Interactive</span>
+                        </div>
+
+                        <div class="stat-card p-6">
+                            <div class="flex gap-4 mb-6">
+                                <div class="w-12 h-12 bg-slate-100 rounded-full flex-shrink-0 flex items-center justify-center text-xl text-slate-600 font-bold">A</div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-slate-800">Patient profile</h3>
+                                    <p class="text-slate-600">Arthur is a 72-year-old man with HRR-mutated mCRPC progressing after prior androgen receptor pathway inhibitor exposure.</p>
+                                </div>
+                            </div>
+
+                            ${renderClinicalVideoBlock('arthur', 'Arthur Consult', 'arthur.png', 'placeholder.mp4', "Clinical interaction: Arthur has reviewed his mutation report and wants to understand whether a non-BRCA HRR alteration still supports PARPi treatment.", { posterMaxClass: 'max-h-[360px] mx-auto object-cover' })}
+
+                            <div class="space-y-3 bg-slate-50 p-5 rounded-lg border border-slate-100 text-sm">
+                                <p><strong class="text-slate-900">Genomic profile:</strong> ATM mutation detected. No BRCA1 or BRCA2 alteration is identified.</p>
+                                <p><strong class="text-slate-900">Patient concern:</strong> He asks whether PARPi-based therapy is still worth discussing if his mutation is not BRCA, and wants to understand the likely benefit versus toxicity burden.</p>
+                                <p><strong class="text-slate-900">Teaching point:</strong> The updated assessment specifically addresses the need to interpret mutation subtype and bring patients into the decision rather than making a one-size-fits-all recommendation.</p>
+                            </div>
+                        </div>
+
+                        ${renderQuizComponent(
+                            'quiz-arthur',
+                            "Which regimen is most clearly positioned in the updated content for a broader non-BRCA HRR-mutated profile like Arthur's?",
+                            [
+                                'Olaparib + abiraterone',
+                                'Talazoparib + enzalutamide',
+                                'Niraparib + abiraterone'
+                            ],
+                            1,
+                            'Correct. The updated needs assessment highlights talazoparib plus enzalutamide as the only regimen with a Category 1 NCCN recommendation spanning both BRCA and non-BRCA HRR-mutated mCRPC populations.'
+                        )}
+
+                        <div class="flex justify-end pt-2">
+                            <button onclick="navigateTo('gap-3', 'intro')" class="bg-rose-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-rose-700 transition flex items-center gap-2">
+                                Start module 3 <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>`;
         }
 
         if (moduleId === 'gap-3') {
-             if (sectionId === 'intro') return `
-                <section class="section-shell slide-up"><div class="space-y-6 max-w-4xl mx-auto">
-                    <div class="bg-gradient-to-r from-rose-700 to-red-800 rounded-2xl p-8 text-white shadow-lg mb-6">
-                        <div class="text-[10px] font-bold text-rose-300 tracking-widest uppercase mb-2">Practice Gap 3</div>
-                        <h1 class="text-3xl font-bold mb-3">Toxicity Mitigation</h1>
-                        <p class="text-rose-100 text-lg">Severe treatment-emergent toxicities drive preventable discontinuations due to under-utilized multidisciplinary care.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 border-t-4 border-t-rose-500">
-                            <h3 class="font-bold text-slate-800 text-lg mb-2">Hematologic Toxicity</h3>
-                            <p class="text-sm text-slate-600 mb-4">Anemia is the most clinically impactful AE. In TALAPRO-2, Grade ≥3 anemia occurred in 46.5% of patients.</p>
-                            <div class="flex items-center gap-2 text-rose-600 font-bold text-sm bg-rose-50 p-2 rounded-lg">
-                                <span class="material-symbols-outlined text-base">warning</span> Drives 44.2% Dose Interruptions
+            if (sectionId === 'intro') return `
+                ${renderHero(
+                    'gap-3',
+                    'AE Management Through the MDT',
+                    'Manage PARPi adverse events proactively and keep patients on therapy safely.',
+                    'The new needs assessment strengthens the AE section with more explicit hematologic, cardiovascular, gastrointestinal, and quality-of-life teaching points. It also makes multidisciplinary care and patient education central to toxicity mitigation.',
+                    [
+                        { label: 'Most common risk', value: 'Anemia', copy: 'Hematologic toxicity remains the most common and most clinically disruptive AE class.' },
+                        { label: 'Management style', value: 'Modify dose', copy: 'Dose interruption and reduction often preserve benefit better than stopping therapy too early.' },
+                        { label: 'Team model', value: 'MDT', copy: 'Pharmacy, nursing, urology, oncology, cardiology, pathology, and genetics all have defined roles.' }
+                    ]
+                )}
+                <section class="section-shell">
+                    <div class="space-y-6 max-w-4xl mx-auto slide-up">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="feature-card">
+                                <h3 class="font-black text-slate-900 text-lg mb-2">Hematologic toxicities</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">Anemia, thrombocytopenia, and neutropenia require regular CBC monitoring, clear dose-modification thresholds, and early supportive care planning.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3 class="font-black text-slate-900 text-lg mb-2">Beyond the CBC</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed">The updated assessment adds cardiovascular risk, fatigue, GI symptoms, MDS or AML counseling, and patient-reported side effect recognition to the monitoring plan.</p>
                             </div>
                         </div>
-                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 border-t-4 border-t-orange-500">
-                            <h3 class="font-bold text-slate-800 text-lg mb-2">Cardiovascular Risk</h3>
-                            <p class="text-sm text-slate-600 mb-4">Adding ARSIs to standard ADT more than doubles the risk of grade ≥3 cardiovascular events (hypertension, arrhythmia).</p>
+
+                        <div class="feature-card">
+                            <h3 class="text-xl font-black text-slate-900 mb-3">Updated management principle</h3>
+                            <p class="text-slate-600 leading-relaxed">Successful PARPi use depends on anticipating adverse events, educating patients about what to report early, and using protocol-driven dose interruption, dose reduction, supportive care, and care coordination before toxicity forces avoidable discontinuation.</p>
+                        </div>
+
+                        <div class="flex justify-end pt-2">
+                            <button onclick="navigateTo('gap-3', 'mdt')" class="bg-rose-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-rose-700 transition flex items-center gap-2">
+                                View MDT roles <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
                         </div>
                     </div>
+                </section>`;
 
-                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
-                        <h3 class="font-bold text-slate-900 mb-2">The Management Principle</h3>
-                        <p class="text-slate-700 leading-relaxed"><strong>Dose modification—rather than treatment discontinuation</strong>—is the preferred management approach for PARPi-associated AEs. Maintaining therapy at a reduced but tolerable dose preserves survival benefit while allowing AE resolution.</p>
+            if (sectionId === 'mdt') return `
+                <section class="section-shell slide-up">
+                    <div class="space-y-6 max-w-4xl mx-auto">
+                        ${renderSectionHeader('gap-3', 'Multidisciplinary care in the updated assessment', 'The revised document is explicit that PARPi management is not owned by one clinician. Testing, therapy selection, toxicity management, and patient counseling all depend on coordinated multidisciplinary roles.', 'Team-Based Care')}
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="feature-card">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-12 h-12 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center shrink-0"><span class="material-symbols-outlined">medication</span></div>
+                                    <div>
+                                        <h3 class="font-bold text-slate-900">Oncology pharmacy</h3>
+                                        <p class="text-sm text-slate-600 mt-1">Medication reconciliation, drug interaction review, antiemetic and supportive care planning, and adherence counseling at treatment start.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center shrink-0"><span class="material-symbols-outlined">clinical_notes</span></div>
+                                    <div>
+                                        <h3 class="font-bold text-slate-900">Nurses and APPs</h3>
+                                        <p class="text-sm text-slate-600 mt-1">Ongoing symptom checks, CBC monitoring workflows, education reinforcement, and rapid escalation when fatigue, dyspnea, bleeding, or GI toxicity appears.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center shrink-0"><span class="material-symbols-outlined">genetics</span></div>
+                                    <div>
+                                        <h3 class="font-bold text-slate-900">Genetics and pathology</h3>
+                                        <p class="text-sm text-slate-600 mt-1">Help interpret germline and somatic findings, clarify actionability, and support counseling when inherited risk is identified.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="feature-card">
+                                <div class="flex items-start gap-4">
+                                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center shrink-0"><span class="material-symbols-outlined">monitor_heart</span></div>
+                                    <div>
+                                        <h3 class="font-bold text-slate-900">Cardiology and supportive specialties</h3>
+                                        <p class="text-sm text-slate-600 mt-1">Baseline cardiovascular assessment and co-management matter when treatment combinations increase blood pressure or other cardiac risks.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="feature-card">
+                            <h3 class="text-xl font-black text-slate-900 mb-3">Patient education is part of toxicity control</h3>
+                            <p class="text-slate-600 leading-relaxed">The updated needs assessment directly links education to adherence and safer treatment. Patients need plain-language guidance on expected side effects, when to call, how dose changes work, and why early reporting can prevent treatment loss.</p>
+                        </div>
+
+                        <div class="flex justify-between pt-4">
+                            <button onclick="navigateTo('gap-3', 'intro')" class="text-slate-500 hover:text-rose-600 font-medium flex items-center gap-2">
+                                <span class="material-symbols-outlined">arrow_back</span> Back
+                            </button>
+                            <button onclick="navigateTo('gap-3', 'case-james')" class="bg-rose-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-rose-700 transition flex items-center gap-2">
+                                Apply to case <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
+                        </div>
                     </div>
+                </section>`;
 
-                    <div class="flex justify-end pt-4"><button onclick="navigateTo('gap-3', 'mdt')" class="bg-rose-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-rose-700 transition flex items-center gap-2">MDT Roles <span class="material-symbols-outlined">arrow_forward</span></button></div>
-                </div>`;
+            if (sectionId === 'case-james') return `
+                <section class="section-shell slide-up">
+                    <div class="space-y-6 max-w-4xl mx-auto">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-2xl font-bold text-slate-900">Case Study: James</h2>
+                            <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold uppercase tracking-wide">Interactive</span>
+                        </div>
 
-             if (sectionId === 'mdt') return `
-                <section class="section-shell slide-up"><div class="space-y-6 max-w-4xl mx-auto">
-                    <h2 class="text-2xl font-bold text-slate-900">Multidisciplinary Team (MDT) Coordination</h2>
-                    <p class="text-slate-600 mb-6">Effective management of PARPi-treated patients requires clear role delineation within the MDT to prevent unnecessary treatment cessations.</p>
+                        <div class="stat-card p-6">
+                            <div class="flex gap-4 mb-6">
+                                <div class="w-12 h-12 bg-slate-100 rounded-full flex-shrink-0 flex items-center justify-center text-xl text-slate-600 font-bold">J</div>
+                                <div>
+                                    <h3 class="font-bold text-lg text-slate-800">Patient profile</h3>
+                                    <p class="text-slate-600">James is a 65-year-old man receiving talazoparib plus enzalutamide for HRR-mutated mCRPC.</p>
+                                </div>
+                            </div>
+
+                            ${renderClinicalVideoBlock('james', 'James Consult', 'james.png', 'placeholder.mp4', "Clinical interaction: James reports severe fatigue after treatment, and his latest labs show grade 3 anemia that needs immediate management.", { posterMaxClass: 'max-h-[360px] mx-auto object-cover' })}
+
+                            <div class="space-y-3 bg-slate-50 p-5 rounded-lg border border-slate-100 text-sm">
+                                <div class="bg-rose-50 border border-rose-200 p-3 rounded text-rose-900 font-bold">Lab alert: Hemoglobin 7.8 g/dL with severe fatigue</div>
+                                <p><strong class="text-slate-900">Patient concern:</strong> He says the treatment feels intolerable and assumes stopping permanently is the only safe option.</p>
+                                <p><strong class="text-slate-900">Team task:</strong> The nurse, pharmacist, and oncology clinician need to explain next steps, supportive care, and how dose modification can preserve benefit.</p>
+                            </div>
+                        </div>
+
+                        ${renderQuizComponent(
+                            'quiz-james',
+                            'What is the most guideline-concordant approach for James right now?',
+                            [
+                                'Stop the PARPi permanently because any grade 3 anemia means treatment failure.',
+                                'Use dose interruption, supportive care, and dose reduction if appropriate while continuing close monitoring and patient education.',
+                                'Continue the same dose and ask James to wait for spontaneous recovery.'
+                            ],
+                            1,
+                            'Correct. The updated assessment emphasizes proactive toxicity mitigation through monitoring, supportive care, and protocol-driven dose modification rather than automatic permanent discontinuation.'
+                        )}
+
+                        <div class="flex justify-end pt-2">
+                            <button onclick="navigateTo('resources', 'summary')" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition flex items-center gap-2">
+                                View summary <span class="material-symbols-outlined">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>`;
+        }
+
+        if (moduleId === 'resources' && sectionId === 'summary') return `
+            <section class="section-shell slide-up">
+                <div class="space-y-6 max-w-4xl mx-auto">
+                    ${renderSectionHeader('resources', 'Clinical takeaways from the updated Pfizer needs assessment', 'This version of the module now reflects broader metastatic prostate cancer education, newer efficacy data, and a stronger focus on workflow, patient communication, and multidisciplinary execution.', 'Module Summary')}
 
                     <div class="space-y-4">
-                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex items-start gap-4">
-                            <div class="w-12 h-12 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined">medication</span>
+                        <div class="feature-card flex items-start gap-4">
+                            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined">biotech</span>
                             </div>
                             <div>
-                                <h3 class="font-bold text-slate-900">Oncology Pharmacists</h3>
-                                <p class="text-sm text-slate-600 mt-1">Essential for medication reconciliation, drug interaction screening (CYP3A4 induction potential with enzalutamide), and AE counseling at treatment initiation.</p>
+                                <h3 class="font-bold text-slate-900 text-lg">Test early and interpret with intent</h3>
+                                <p class="text-slate-600 mt-1">Concurrent germline and somatic testing should support treatment selection, risk assessment, counseling, and re-evaluation as disease evolves.</p>
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex items-start gap-4">
-                            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined">clinical_notes</span>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-900">Nurses & APPs</h3>
-                                <p class="text-sm text-slate-600 mt-1">Serve as primary touchpoints for ongoing symptom monitoring, establishing routine CBC review at defined cycle intervals, and initiating dose-modification standing orders.</p>
-                            </div>
-                        </div>
-
-                        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex items-start gap-4">
-                            <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined">monitor_heart</span>
+                        <div class="feature-card flex items-start gap-4">
+                            <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined">timeline</span>
                             </div>
                             <div>
-                                <h3 class="font-bold text-slate-900">Cardio-Oncology</h3>
-                                <p class="text-sm text-slate-600 mt-1">Baseline cardiovascular risk stratification is critical for patients initiating NHA therapy, especially given the hypertension rates associated with combinations like Talazoparib/Enzalutamide.</p>
+                                <h3 class="font-bold text-slate-900 text-lg">Use the evidence by disease state and mutation subtype</h3>
+                                <p class="text-slate-600 mt-1">The update now includes mCSPC evidence and reinforces that BRCA and non-BRCA HRR alterations do not carry identical PARPi benefit profiles.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-card flex items-start gap-4">
+                            <div class="w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined">health_and_safety</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-lg">Anticipate adverse events and manage them early</h3>
+                                <p class="text-slate-600 mt-1">CBC-based monitoring, supportive care, cardiovascular awareness, and dose-modification pathways help keep patients on effective therapy safely.</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-card flex items-start gap-4">
+                            <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined">groups</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-lg">Teach the patient and use the multidisciplinary team</h3>
+                                <p class="text-slate-600 mt-1">Shared decision-making, education about expected adverse events, and coordinated multidisciplinary roles are now core learning goals in the updated module.</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="flex justify-between pt-6"><button onclick="navigateTo('gap-3', 'intro')" class="text-slate-500 hover:text-rose-600 font-medium flex items-center gap-2"><span class="material-symbols-outlined">arrow_back</span> Back</button><button onclick="navigateTo('gap-3', 'case-james')" class="bg-rose-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-rose-700 transition flex items-center gap-2">Apply to Case <span class="material-symbols-outlined">arrow_forward</span></button></div>
-                </div>`;
-
-             if (sectionId === 'case-james') return `
-                <section class="section-shell slide-up"><div class="space-y-6 max-w-4xl mx-auto">
-                    <div class="flex items-center justify-between"><h2 class="text-2xl font-bold text-slate-900">Case Study: James</h2><span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold uppercase tracking-wide">Interactive</span></div>
-                    
-                    <div class="stat-card p-6">
-                        <div class="flex gap-4 mb-6"><div class="w-12 h-12 bg-slate-100 rounded-full flex-shrink-0 flex items-center justify-center text-xl text-slate-600 font-bold">J</div><div><h3 class="font-bold text-lg text-slate-800">Patient Profile</h3><p class="text-slate-600">James is a 65-year-old on Talazoparib + Enzalutamide for 3 months.</p></div></div>
-                        
-                        ${renderClinicalVideoBlock('james', 'James Consult', 'james.png', 'placeholder.mp4', "Clinical Interaction: James appears pale and exhausted. His recent lab panel shows his hemoglobin has dropped to 7.8 g/dL (Grade 3 Anemia).", { posterMaxClass: 'max-h-[360px] mx-auto object-cover' })}
-
-                        <div class="space-y-3 bg-slate-50 p-5 rounded-lg border border-slate-100 text-sm mt-6">
-                            <div class="bg-rose-50 border border-rose-200 p-3 rounded text-rose-900 font-bold mb-2">Lab Alert: Hemoglobin 7.8 g/dL</div>
-                            <p><strong class="text-slate-900">Patient Report:</strong> "I'm too tired to function. I think this drug is toxic for me. I need to stop taking it entirely."</p>
-                        </div>
-                    </div>
-
-                    ${renderQuizComponent('quiz-james', "What is the preferred, guideline-concordant management approach for James?", [
-                        "Permanently discontinue the PARPi to prevent bone marrow failure.",
-                        "Switch immediately to a different PARPi agent.",
-                        "Utilize dose interruption followed by dose reduction (e.g., 0.5 mg to 0.35 mg) while providing supportive care."
-                    ], 2, "Correct! Dose modification—rather than complete treatment discontinuation—is the preferred management approach. Maintaining therapy at a reduced but tolerable dose preserves survival benefit while managing the anemia.")}
-                    
-                    <div class="flex justify-end pt-4"><button onclick="navigateTo('resources', 'summary')" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition flex items-center gap-2">View Summary <span class="material-symbols-outlined">arrow_forward</span></button></div>
-                </div>`;
-        }
-        
-        if (moduleId === 'resources' && sectionId === 'summary') return `
-            <section class="section-shell slide-up"><div class="space-y-6 max-w-4xl mx-auto">
-                <h2 class="text-2xl font-bold text-slate-900 mb-6">Core Clinical Takeaways</h2>
-                
-                <div class="space-y-4">
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-start gap-4">
-                        <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined">biotech</span>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-slate-900 text-lg">Test Early & Comprehensively</h3>
-                            <p class="text-slate-600 mt-1">Do not delay. Order <strong>concurrent germline and somatic HRR testing</strong> at the time of mCRPC diagnosis for all patients.</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-start gap-4">
-                        <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined">my_location</span>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-slate-900 text-lg">Targeted Agent Selection</h3>
-                            <p class="text-slate-600 mt-1">Match the mutation to the Category 1 recommendation. For non-BRCA HRRm (like ATM), <strong>Talazoparib + Enzalutamide</strong> is uniquely positioned.</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-start gap-4">
-                        <div class="w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center shrink-0">
-                            <span class="material-symbols-outlined">tune</span>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-slate-900 text-lg">Proactive Dose Modification</h3>
-                            <p class="text-slate-600 mt-1">Manage expected AEs (like Grade 3 anemia) proactively through <strong>protocol-driven dose interruptions and reductions</strong>, avoiding premature discontinuation.</p>
-                        </div>
+                    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-6 mt-8 text-center">
+                        <span class="material-symbols-outlined text-indigo-500 text-4xl mb-2">task_alt</span>
+                        <h3 class="font-bold text-indigo-900 text-xl">Module Complete</h3>
+                        <p class="text-indigo-700 mt-2">You have completed the updated metastatic prostate cancer PARPi learning pathway.</p>
                     </div>
                 </div>
-                
-                <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-6 mt-8 text-center">
-                    <span class="material-symbols-outlined text-indigo-500 text-4xl mb-2">task_alt</span>
-                    <h3 class="font-bold text-indigo-900 text-xl">Module Complete</h3>
-                    <p class="text-indigo-700 mt-2">You have successfully completed the interactive pathways module for mCRPC.</p>
-                </div>
-            </div>`;
-            
+            </section>`;
+
         return '';
     }
 
@@ -1172,20 +1367,26 @@ ${renderClinicalVideoBlock('marcus', 'Marcus Consult', 'marcus.png', 'placeholde
             </div>
             <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent z-20 text-left">
               <div class="text-white font-semibold text-xl">${label}</div>
-              <div class="text-blue-200 text-sm mt-1">Interactive clinical observation and patient-reported burden</div>
+              <div class="text-blue-200 text-sm mt-1">Tap to open the clinical video</div>
             </div>
           </button>
 
-          <div class="hidden relative fade-swap swap-hidden bg-slate-900" data-cv-wrap>
-            <div class="w-full min-h-[320px] md:min-h-[360px] flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-slate-900 via-slate-800 to-blue-950">
-              <div class="pill !bg-blue-500/15 !text-blue-100 !border-blue-300/20 mb-4">Patient Report</div>
-              <div class="bg-blue-500/20 p-4 rounded-full mb-4 border border-blue-300/10">
-                <span class="material-symbols-outlined text-5xl text-blue-300">forum</span>
-              </div>
-              <h3 class="font-semibold text-2xl text-white mb-3">${name}</h3>
-              <p class="text-slate-200 max-w-3xl mx-auto leading-relaxed text-lg italic">${observationText}</p>
+          <div class="hidden relative fade-swap swap-hidden bg-slate-950" data-cv-wrap>
+            <div class="p-3 md:p-4">
+              <video class="w-full rounded-2xl bg-black max-h-[420px]" controls playsinline preload="metadata" poster="${posterSrc}" data-cv-video>
+                <source src="${videoSrc}" type="video/mp4" />
+                Your browser does not support HTML5 video.
+              </video>
             </div>
-            <button type="button" class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full p-2.5 backdrop-blur transition" data-cv-replay aria-label="Close report">
+            <div class="px-4 md:px-5 pb-5">
+              <div class="rounded-2xl border border-blue-300/12 bg-white/5 p-4 text-left">
+                <div class="pill !bg-blue-500/15 !text-blue-100 !border-blue-300/20 mb-3">Patient Report</div>
+                <h3 class="font-semibold text-xl text-white mb-2">${name}</h3>
+                <p class="text-slate-200 leading-relaxed">${observationText}</p>
+                <div class="text-xs text-blue-200/70 mt-3">Video source: ${videoSrc}</div>
+              </div>
+            </div>
+            <button type="button" class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full p-2.5 backdrop-blur transition" data-cv-replay aria-label="Close video">
               <span class="material-symbols-outlined text-sm">close</span>
             </button>
           </div>
@@ -1201,6 +1402,7 @@ ${renderClinicalVideoBlock('marcus', 'Marcus Consult', 'marcus.png', 'placeholde
             const posterBtn = block.querySelector('[data-cv-poster]');
             const wrap = block.querySelector('[data-cv-wrap]');
             const replay = block.querySelector('[data-cv-replay]');
+            const video = block.querySelector('[data-cv-video]');
 
             if (!posterBtn || !wrap) return;
 
@@ -1214,9 +1416,26 @@ ${renderClinicalVideoBlock('marcus', 'Marcus Consult', 'marcus.png', 'placeholde
                     wrap.classList.remove('swap-hidden');
                     wrap.classList.add('swap-visible');
                 });
+
+                if (video) {
+                    try {
+                        video.currentTime = 0;
+                        const playPromise = video.play();
+                        if (playPromise && typeof playPromise.catch === 'function') {
+                            playPromise.catch(() => {});
+                        }
+                    } catch (e) {}
+                }
             };
 
             const resetSim = () => {
+                if (video) {
+                    try {
+                        video.pause();
+                        video.currentTime = 0;
+                    } catch (e) {}
+                }
+
                 wrap.classList.add('swap-hidden');
                 wrap.classList.remove('swap-visible');
                 setTimeout(() => {
