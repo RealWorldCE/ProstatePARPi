@@ -1,1536 +1,1205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Real World CE | Prostate PARPi Module</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet">
-    
-    
-  <style>
-    :root{
-      --navy:#0b1f3a;
-      --navy-2:#102a4c;
-      --blue:#2f6df6;
-      --sky:#63b3ff;
-      --cyan:#7dd3fc;
-      --slate:#0f172a;
-      --border:rgba(148,163,184,.18);
-      --panel:rgba(255,255,255,.82);
-      --glass:blur(20px);
-      --shadow:0 20px 60px rgba(2,6,23,.10);
-      --shadow-strong:0 24px 80px rgba(15,23,42,.16);
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Real World CE | Featuring Real World Patient</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet"/>
+
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                fontFamily: { sans: ['Inter', 'sans-serif'] },
+                colors: {
+                    navy: '#002147',
+                    'navy-light': '#003366'
+                }
+            }
+        }
     }
+</script>
 
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body {
-      font-family:'Inter',sans-serif;
-      min-height:100vh;
-      color:#0f172a;
-      background:
-        radial-gradient(circle at top left, rgba(96,165,250,.20), transparent 28%),
-        radial-gradient(circle at top right, rgba(56,189,248,.14), transparent 30%),
-        linear-gradient(180deg, #f8fbff 0%, #eef5ff 45%, #f8fafc 100%);
-    }
+<style>
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-    .custom-scroll::-webkit-scrollbar { width: 8px; height:8px; }
-    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(148,163,184,.55); border-radius: 999px; }
+  .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+  .slide-up { animation: slideUp 0.4s ease-out forwards; }
+  @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+  @keyframes slideUp { from {opacity:0; transform:translateY(12px);} to {opacity:1; transform:translateY(0);} }
 
-    .glass-panel{
-      background:var(--panel);
-      backdrop-filter:var(--glass);
-      -webkit-backdrop-filter:var(--glass);
-      border:1px solid var(--border);
-      box-shadow:var(--shadow);
-    }
+  .typing-indicator span { animation: blink 1.4s infinite both; }
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink { 0%{opacity:.2;} 20%{opacity:1;} 100%{opacity:.2;} }
 
-    .glass-dark{
-      position:relative;
-      background:
-        radial-gradient(circle at 18% 16%, rgba(125,211,252,.16), transparent 20%),
-        radial-gradient(circle at 82% 12%, rgba(96,165,250,.14), transparent 20%),
-        linear-gradient(180deg, rgba(11,31,58,.95), rgba(16,42,76,.92));
-      backdrop-filter:blur(24px);
-      -webkit-backdrop-filter:blur(24px);
-      border-right:1px solid rgba(255,255,255,.08);
-      box-shadow:var(--shadow-strong);
-      overflow:hidden;
-      isolation:isolate;
-    }
-    .glass-dark::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0) 22%),
-        radial-gradient(circle at top right, rgba(125,211,252,.10), transparent 24%);
-      pointer-events:none;
-      z-index:0;
-    }
-    .glass-dark::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:inherit;
-      padding:1px;
-      background:linear-gradient(180deg, rgba(125,211,252,.28), rgba(96,165,250,.10), rgba(255,255,255,.05));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events:none;
-      z-index:1;
-    }
+  /* Clinical overlay */
+  .clinical-zoom { transform: scale(1); transition: transform 650ms cubic-bezier(.22,.61,.36,1); }
+  #clinical-overlay.zoomed .clinical-zoom { transform: scale(1.05); }
 
-    .hero-mesh{
-      background:
-        radial-gradient(circle at 20% 20%, rgba(125,211,252,.28), transparent 22%),
-        radial-gradient(circle at 80% 18%, rgba(59,130,246,.28), transparent 24%),
-        radial-gradient(circle at 70% 80%, rgba(14,165,233,.18), transparent 24%),
-        linear-gradient(135deg, #071528 0%, #0d2342 42%, #12305d 100%);
-      position:relative;
-      overflow:hidden;
-    }
+  .hotspot {
+    position: absolute; width: 14px; height: 14px; border-radius: 999px;
+    background: rgba(37, 99, 235, 0.95); box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.2);
+    transform: translate(-50%, -50%); pointer-events: auto; cursor: pointer;
+    animation: pulse-hotspot 2s infinite;
+  }
+  @keyframes pulse-hotspot {
+      0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5); }
+      70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+  }
 
-    .hero-mesh::before,
-    .hero-mesh::after{
-      content:"";
-      position:absolute;
-      inset:auto;
-      border-radius:999px;
-      filter:blur(12px);
-      opacity:.55;
-      pointer-events:none;
-    }
+  .tooltip {
+    position: absolute; min-width: 200px; background: rgba(15, 23, 42, 0.95); color: white;
+    padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+    font-size: 12px; line-height: 1.4; transform: translate(-50%, -120%);
+    opacity: 0; transition: opacity 150ms ease; pointer-events: none; z-index: 30;
+  }
+  .hotspot:hover + .tooltip { opacity: 1; }
 
-    .hero-mesh::before{
-      width:240px;
-      height:240px;
-      top:-80px;
-      right:-40px;
-      background:radial-gradient(circle, rgba(125,211,252,.85), rgba(125,211,252,0));
-    }
-
-    .hero-mesh::after{
-      width:220px;
-      height:220px;
-      bottom:-90px;
-      left:-40px;
-      background:radial-gradient(circle, rgba(59,130,246,.70), rgba(59,130,246,0));
-    }
-
-    .floating-orb{
-      position:absolute;
-      border-radius:999px;
-      filter:blur(6px);
-      opacity:.25;
-      animation:floatOrb 8s ease-in-out infinite;
-    }
-
-    .orb-a{ width:110px; height:110px; background:#7dd3fc; top:16%; left:58%; }
-    .orb-b{ width:76px; height:76px; background:#60a5fa; bottom:18%; right:22%; animation-delay:1.6s; }
-    .orb-c{ width:52px; height:52px; background:#93c5fd; top:58%; left:18%; animation-delay:3.1s; }
-
-    .fade-in { animation: fadeIn .45s ease-out forwards; }
-    .slide-up { animation: slideUp .45s ease-out forwards; }
-    .lift { transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
-    .lift:hover { transform:translateY(-2px); box-shadow:var(--shadow-strong); }
-
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:.4rem;
-      padding:.45rem .8rem;
-      border-radius:999px;
-      font-size:.75rem;
-      font-weight:700;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.10);
-      color:#dbeafe;
-    }
-
-    .stat-card{
-      position:relative;
-      overflow:hidden;
-      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.95));
-      border:1px solid rgba(148,163,184,.16);
-      border-radius:1.25rem;
-      padding:1.1rem;
-      box-shadow:0 16px 50px rgba(15,23,42,.08);
-    }
-
-    .stat-card::after{
-      content:"";
-      position:absolute;
-      inset:auto -40px -40px auto;
-      width:110px;
-      height:110px;
-      border-radius:999px;
-      background:radial-gradient(circle, rgba(96,165,250,.16), transparent 65%);
-    }
-
-    .section-shell{
-      max-width:1100px;
-      margin:0 auto;
-      display:grid;
-      grid-template-columns:minmax(0,1fr);
-      gap:1.5rem;
-    }
-
-    .module-banner{
-      position:relative;
-      overflow:hidden;
-      border-radius:1.75rem;
-      padding:1.6rem;
-      color:white;
-      box-shadow:var(--shadow-strong);
-    }
-
-    .gradient-rose{ background:linear-gradient(135deg, #7f1d1d 0%, #be123c 40%, #fb7185 100%); }
-    .gradient-blue{ background:linear-gradient(135deg, #0b1f3a 0%, #1d4ed8 48%, #60a5fa 100%); }
-    .gradient-emerald{ background:linear-gradient(135deg, #064e3b 0%, #0f766e 48%, #2dd4bf 100%); }
-    .gradient-indigo{ background:linear-gradient(135deg, #312e81 0%, #4338ca 48%, #60a5fa 100%); }
-
-    .module-banner::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 80% 18%, rgba(255,255,255,.26), transparent 18%),
-        radial-gradient(circle at 20% 80%, rgba(255,255,255,.18), transparent 25%);
-      pointer-events:none;
-    }
-
-    .feature-card{
-      background:linear-gradient(180deg, rgba(255,255,255,.97), rgba(255,255,255,.90));
-      border:1px solid rgba(148,163,184,.18);
-      border-radius:1.25rem;
-      padding:1.2rem;
-      box-shadow:0 14px 40px rgba(15,23,42,.08);
-    }
-
-    .section-header-card{
-      position:relative;
-      overflow:hidden;
-      border-radius:1.5rem;
-      padding:1.4rem;
-      color:white;
-      box-shadow:var(--shadow-strong);
-    }
-
-    .section-header-card::after{
-      content:"";
-      position:absolute;
-      inset:auto;
-      width:180px;
-      height:180px;
-      right:-60px;
-      top:-60px;
-      border-radius:999px;
-      background:radial-gradient(circle, rgba(255,255,255,.22), rgba(255,255,255,0));
-    }
-
-    .nav-btn{
-      width:100%;
-      text-align:left;
-      padding:.9rem 1rem;
-      border-radius:1rem;
-      display:flex;
-      gap:.8rem;
-      align-items:flex-start;
-      transition:all .22s ease;
-      border:1px solid transparent;
-    }
-
-    .nav-btn:hover{
-      background:rgba(255,255,255,.08);
-      border-color:rgba(255,255,255,.08);
-      transform:translateX(2px);
-    }
-
-    .nav-btn.active-rose{ background:rgba(255,241,242,.98); color:#9f1239; border-color:rgba(251,113,133,.28); box-shadow:0 10px 24px rgba(251,113,133,.12); }
-    .nav-btn.active-blue{ background:rgba(239,246,255,.98); color:#1d4ed8; border-color:rgba(96,165,250,.28); box-shadow:0 10px 24px rgba(59,130,246,.12); }
-    .nav-btn.active-emerald{ background:rgba(236,253,245,.98); color:#0f766e; border-color:rgba(45,212,191,.26); box-shadow:0 10px 24px rgba(20,184,166,.12); }
-    .nav-btn.active-indigo{ background:rgba(238,242,255,.98); color:#4338ca; border-color:rgba(129,140,248,.28); box-shadow:0 10px 24px rgba(99,102,241,.12); }
-
-    .nav-icon{
-      width:2rem;height:2rem;border-radius:.8rem;display:flex;align-items:center;justify-content:center;
-      background:rgba(255,255,255,.08); color:rgba(255,255,255,.82); flex-shrink:0;
-    }
-
-    .progress-track{ height:.6rem; border-radius:999px; background:rgba(226,232,240,.9); overflow:hidden; }
-    .progress-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg, #1d4ed8, #38bdf8); transition:width .35s ease; }
-
-    .quiz-option{ transition:all .18s ease; }
-    .quiz-option:hover{ transform:translateY(-1px); }
-
-    .medical-grid{
-      display:grid;
-      grid-template-columns:repeat(12, minmax(0,1fr));
-      gap:1rem;
-    }
-
-    .medical-card{
-      border-radius:1.25rem;
-      border:1px solid rgba(148,163,184,.16);
-      background:linear-gradient(180deg, rgba(255,255,255,.98), rgba(248,250,252,.96));
-      box-shadow:0 16px 44px rgba(15,23,42,.08);
-      overflow:hidden;
-    }
-
-    .medical-card-header{
-      padding:1rem 1.1rem;
-      border-bottom:1px solid rgba(226,232,240,.85);
-      background:linear-gradient(180deg, rgba(248,250,252,.95), rgba(255,255,255,.92));
-    }
-
-    .clinical-shell{
-      background:linear-gradient(180deg, rgba(8,15,30,.98), rgba(15,23,42,.96));
-      border:1px solid rgba(96,165,250,.18);
-      border-radius:1.35rem;
-      overflow:hidden;
-      box-shadow:0 20px 50px rgba(15,23,42,.24);
-    }
-
-    .fade-swap { transition: opacity 280ms ease, transform 280ms ease; will-change: opacity, transform; }
-    .swap-hidden { opacity: 0; transform: translateY(6px); pointer-events: none; }
-    .swap-visible { opacity: 1; transform: translateY(0); }
-
-    .dot-grid{
-      background-image:radial-gradient(rgba(255,255,255,.10) 1px, transparent 1px);
-      background-size:16px 16px;
-    }
-
-    .pill{
-      display:inline-flex;align-items:center;gap:.4rem;padding:.38rem .7rem;border-radius:999px;font-size:.73rem;font-weight:700;
-      background:#eff6ff;color:#1d4ed8;border:1px solid rgba(96,165,250,.26);
-    }
-
-    .completion-shell{
-      position:relative;
-      overflow:hidden;
-      border-radius:1.5rem;
-      background:linear-gradient(135deg, #0f172a 0%, #0b1f3a 42%, #0f766e 100%);
-      color:white;
-      box-shadow:var(--shadow-strong);
-    }
-
-    .completion-shell::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(125,211,252,.18), transparent 20%),
-        radial-gradient(circle at 80% 80%, rgba(45,212,191,.16), transparent 22%);
-      pointer-events:none;
-    }
-
-    .mobile-only { display:none; }
-
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes floatOrb { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-12px); } }
-
-    @media (max-width: 1024px){
-      .hero-actions{ flex-direction:column; align-items:flex-start; }
-    }
-
-    @media (max-width: 768px){
-      .mobile-only { display:block; }
-      .desktop-stats { display:none; }
-      .section-shell { gap:1rem; }
-    }
+  /* UI Elements */
+  .stat-card { background: white; border: 1px solid #e2e8f0; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
   
-    .sidebar-glow{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      z-index:0;
-      overflow:hidden;
-    }
-    .sidebar-glow::before,
-    .sidebar-glow::after{
-      content:"";
-      position:absolute;
-      border-radius:999px;
-      filter:blur(24px);
-      opacity:.55;
-      animation:sidebarFloat 10s ease-in-out infinite;
-    }
-    .sidebar-glow::before{
-      width:180px;
-      height:180px;
-      top:4%;
-      left:-32px;
-      background:radial-gradient(circle, rgba(125,211,252,.32), rgba(125,211,252,0));
-    }
-    .sidebar-glow::after{
-      width:220px;
-      height:220px;
-      bottom:10%;
-      right:-54px;
-      background:radial-gradient(circle, rgba(59,130,246,.28), rgba(59,130,246,0));
-      animation-delay:2.2s;
-    }
-    .glow-edge{
-      position:absolute;
-      top:0;
-      bottom:0;
-      width:2px;
-      right:0;
-      background:linear-gradient(180deg, rgba(125,211,252,.06), rgba(125,211,252,.65), rgba(59,130,246,.18));
-      box-shadow:0 0 18px rgba(125,211,252,.28);
-      opacity:.88;
-      z-index:2;
-    }
-    .brand-toggle-shell{
-      display:flex;
-      gap:.5rem;
-      align-items:center;
-      flex-wrap:wrap;
-      margin-top:.95rem;
-    }
-    .brand-toggle{
-      display:inline-flex;
-      align-items:center;
-      gap:.45rem;
-      padding:.46rem .78rem;
-      border-radius:999px;
-      font-size:.67rem;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      background:rgba(255,255,255,.08);
-      color:#e0f2fe;
-      border:1px solid rgba(255,255,255,.10);
-      transition:all .22s ease;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
-    }
-    .brand-toggle.active{
-      background:linear-gradient(135deg, rgba(255,255,255,.96), rgba(224,242,254,.94));
-      color:#0b1f3a;
-      border-color:rgba(186,230,253,.8);
-      box-shadow:0 10px 24px rgba(14,165,233,.18);
-    }
-    .brand-toggle .material-symbols-outlined{
-      font-size:15px;
-    }
-    .sidebar-brand-block{
-      position:relative;
-      z-index:3;
-    }
-    .sidebar-section{
-      position:relative;
-      z-index:3;
-    }
-    .glass-panel{
-      background:var(--panel);
-      backdrop-filter:var(--glass);
-      -webkit-backdrop-filter:var(--glass);
-      border:1px solid var(--border);
-      box-shadow:0 16px 48px rgba(2,6,23,.08);
-    }
-    .nav-btn{
-      position:relative;
-      overflow:hidden;
-    }
-    .nav-btn::after{
-      content:"";
-      position:absolute;
-      inset:auto auto 0 0;
-      width:0;
-      height:2px;
-      background:linear-gradient(90deg, rgba(125,211,252,.9), rgba(96,165,250,.65));
-      transition:width .24s ease;
-    }
-    .nav-btn:hover::after,
-    .nav-btn.active-rose::after,
-    .nav-btn.active-blue::after,
-    .nav-btn.active-emerald::after,
-    .nav-btn.active-indigo::after{
-      width:100%;
-    }
-    .hero-mesh{
-      border:1px solid rgba(255,255,255,.10);
-    }
-    .hero-mesh .chip{
-      box-shadow:0 8px 24px rgba(14,165,233,.16);
-    }
-    @keyframes sidebarFloat {
-      0%,100% { transform:translateY(0px) translateX(0px); }
-      50% { transform:translateY(-10px) translateX(6px); }
-    }
+  .module-tab {
+    display:inline-flex; align-items:center; gap:0.5rem; padding:0.6rem 1rem; border-radius:999px;
+    color:#64748b; font-weight:600; border:1px solid transparent; transition:all 0.2s ease; cursor:pointer;
+  }
+  .module-tab:hover { color:#1d4ed8; background:#eff6ff; }
+  .module-tab.active { color:#002147; background:#e0e7ff; border-color:#bfdbfe; box-shadow:0 2px 8px rgba(37,99,235,0.1); }
 
-  </style>
+  .quiz-choice { border: 2px solid #e2e8f0; transition: all 0.2s; cursor: pointer; }
+  .quiz-choice:hover { border-color: #bfdbfe; background: #f8fafc; transform: translateY(-1px); }
+  .quiz-choice.selected { border-color: #002147; background: #eff6ff; }
+  .quiz-choice.correct { border-color: #22c55e; background: #f0fdf4; }
+  .quiz-choice.incorrect { border-color: #ef4444; background: #fef2f2; }
 
+  /* Elite shell */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 12% 12%, rgba(59,130,246,0.18), transparent 32%),
+      radial-gradient(circle at 88% 14%, rgba(14,165,233,0.14), transparent 28%),
+      radial-gradient(circle at 82% 88%, rgba(99,102,241,0.12), transparent 30%),
+      linear-gradient(180deg, #eef4ff 0%, #f8fbff 38%, #f5f8fc 100%);
+    z-index: -3;
+  }
 
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(148,163,184,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148,163,184,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent 78%);
+    z-index: -2;
+    pointer-events: none;
+  }
+
+  .ambient-orb {
+    position: fixed;
+    border-radius: 999px;
+    filter: blur(60px);
+    opacity: 0.35;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .ambient-orb.orb-a { width: 20rem; height: 20rem; top: 5rem; left: -4rem; background: rgba(59,130,246,0.28); }
+  .ambient-orb.orb-b { width: 24rem; height: 24rem; top: 22rem; right: -6rem; background: rgba(14,165,233,0.22); }
+  .ambient-orb.orb-c { width: 18rem; height: 18rem; bottom: -2rem; left: 38%; background: rgba(99,102,241,0.18); }
+
+  .glass-panel {
+    background: linear-gradient(180deg, rgba(255,255,255,0.86) 0%, rgba(255,255,255,0.74) 100%);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.72);
+    box-shadow:
+      0 24px 60px rgba(15, 23, 42, 0.10),
+      0 1px 0 rgba(255,255,255,0.55) inset;
+  }
+
+  .glass-panel-dark {
+    background: linear-gradient(180deg, rgba(8,15,33,0.78) 0%, rgba(8,15,33,0.62) 100%);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(148,163,184,0.14);
+    box-shadow: 0 24px 60px rgba(2, 6, 23, 0.38);
+  }
+
+  .premium-divider {
+    position: relative;
+  }
+
+  .premium-divider::after {
+    content: "";
+    position: absolute;
+    left: 1.25rem;
+    right: 1.25rem;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(148,163,184,0.32), transparent);
+  }
+
+  .title-glow {
+    text-shadow: 0 10px 30px rgba(37, 99, 235, 0.18);
+  }
+
+  .eyebrow-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .45rem .75rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.78);
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .hero-shine {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-shine::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.55), transparent 38%),
+      radial-gradient(circle at top right, rgba(59,130,246,0.22), transparent 30%);
+    pointer-events: none;
+  }
+
+  .avatar-frame::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .floating-chip {
+    background: rgba(255,255,255,0.88);
+    border: 1px solid rgba(255,255,255,0.9);
+    box-shadow: 0 16px 40px rgba(15,23,42,0.14);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .nav-thumb {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.95rem;
+    border: 1px solid rgba(255,255,255,0.8);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.10);
+  }
+
+  .nav-thumb::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(2,6,23,0.16));
+    pointer-events: none;
+  }
+
+  .custom-scroll::-webkit-scrollbar { width: 10px; }
+  .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+  .custom-scroll::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.28); border-radius: 999px; border: 2px solid transparent; background-clip: padding-box; }
+
+  .stat-card {
+    position: relative;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.96) 100%);
+    border: 1px solid rgba(226,232,240,0.92);
+    border-radius: 1.35rem;
+    padding: 1.5rem;
+    box-shadow:
+      0 20px 40px rgba(15, 23, 42, 0.06),
+      0 1px 0 rgba(255,255,255,0.82) inset;
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(96,165,250,0.40);
+    box-shadow:
+      0 28px 50px rgba(15, 23, 42, 0.10),
+      0 1px 0 rgba(255,255,255,0.82) inset;
+  }
+
+  .stat-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(59,130,246,0.09), transparent 28%);
+    pointer-events: none;
+  }
+
+  .module-tab {
+    display:inline-flex; align-items:center; gap:0.5rem; padding:0.7rem 1rem; border-radius:999px;
+    color:#64748b; font-weight:700; border:1px solid transparent; transition:all 0.2s ease; cursor:pointer;
+    background: rgba(255,255,255,0.64);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .module-tab:hover { color:#1d4ed8; background:#eff6ff; border-color: rgba(191,219,254,.75); }
+  .module-tab.active { color:#002147; background:linear-gradient(180deg, rgba(224,231,255,0.95), rgba(219,234,254,0.96)); border-color:#bfdbfe; box-shadow:0 8px 24px rgba(37,99,235,0.12); }
+
+  .quiz-choice { border: 2px solid #e2e8f0; transition: all 0.2s; cursor: pointer; box-shadow: 0 10px 24px rgba(15,23,42,0.04); }
+  .quiz-choice:hover { border-color: #bfdbfe; background: #f8fafc; transform: translateY(-1px); box-shadow: 0 16px 32px rgba(15,23,42,0.08); }
+
+  .resource-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(248,250,252,0.96) 100%);
+    border: 1px solid rgba(226,232,240,0.92);
+    box-shadow: 0 20px 38px rgba(15,23,42,0.06);
+  }
+
+</style>
 </head>
-<body class="h-screen flex overflow-hidden">
-<!-- Sidebar -->
 
-  
-  <aside id="sidebar" class="glass-dark text-white flex-shrink-0 transition-all duration-300 w-[310px] flex flex-col z-30 absolute md:relative h-full transform md:transform-none -translate-x-full md:translate-x-0">
-    <div class="sidebar-glow"></div>
-    <div class="glow-edge"></div>
+<body class="h-screen flex flex-col overflow-hidden font-sans text-slate-800">
+<div class="ambient-orb orb-a"></div>
+<div class="ambient-orb orb-b"></div>
+<div class="ambient-orb orb-c"></div>
 
-    <div class="px-5 py-5 border-b border-white/10 sidebar-brand-block">
-      <div class="flex items-start justify-between gap-3">
-        <div class="flex items-center gap-3">
-          <div>
-            <div class="text-[1.02rem] font-black tracking-[0.14em] uppercase">Real World <span class="text-sky-300">CE</span></div>
-            <div class="text-[11px] uppercase tracking-[0.28em] text-blue-100/80 mt-1" id="rwce-feature-label">Featuring: Real World Data</div>
+<!-- Header -->
+<header class="h-16 glass-panel premium-divider mx-3 md:mx-6 mt-3 rounded-2xl flex items-center justify-between px-4 md:px-6 shrink-0 z-20 relative">
+  <div class="flex items-center">
+<div class="leading-tight hidden sm:block">
+      <div class="font-black text-lg uppercase whitespace-nowrap text-navy tracking-tight">REAL WORLD <span class="text-blue-600">CE</span></div>
+      <div class="text-[10px] font-black tracking-[0.22em] uppercase text-slate-400 mt-1">Featuring <span class="text-blue-600">Real World Patient</span></div>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-6">
+    <div class="hidden md:flex flex-col items-end">
+      <div class="flex items-center justify-between w-full mb-1">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Mastery Progress</span>
+        <span class="text-[10px] font-bold text-blue-600" id="progress-text">0%</span>
+      </div>
+      <div class="w-40 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+        <div class="h-full bg-blue-600 w-0 transition-all duration-500" id="progress-bar"></div>
+      </div>
+    </div>
+    <button class="md:hidden text-slate-600 hover:text-slate-900" id="btn-menu">
+      <span class="material-symbols-outlined text-2xl">menu</span>
+    </button>
+  </div>
+</header>
+
+<div class="flex flex-1 overflow-hidden relative px-3 md:px-6 pb-4 pt-4">
+
+  <!-- Sidebar Navigation -->
+  <nav id="sidebar" class="absolute md:relative w-72 glass-panel h-full transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-30 flex flex-col shrink-0 shadow-2xl rounded-3xl md:mr-4 hero-shine">
+    <div class="p-4 premium-divider flex justify-between items-center rounded-t-3xl bg-gradient-to-r from-white/70 to-blue-50/70">
+      <h2 class="font-bold text-slate-800 text-sm uppercase tracking-wider flex items-center gap-2">
+        <span class="material-symbols-outlined text-blue-600 text-[18px]">library_books</span> Curriculum
+      </h2>
+      <button class="md:hidden text-slate-400 hover:text-slate-600" id="btn-close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-3 space-y-1.5 custom-scroll" id="session-list"></div>
+
+    <div class="p-4 rounded-b-3xl bg-gradient-to-r from-blue-50/80 to-indigo-50/70">
+      <div class="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-1">CME Status</div>
+      <div class="flex items-center gap-2 text-xs font-bold text-blue-900">
+        <span class="material-symbols-outlined text-[16px]">workspace_premium</span>
+        1.5 AMA PRA Category 1
+      </div>
+    </div>
+  </nav>
+
+  <!-- Overlay for mobile sidebar -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/50 z-20 hidden md:hidden transition-opacity"></div>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 flex flex-col md:flex-row overflow-hidden relative gap-4">
+
+    <!-- Left Panel: Patient Viz -->
+    <section class="w-full md:w-[35%] lg:w-[32%] glass-panel rounded-3xl flex flex-col overflow-y-auto relative overflow-hidden shrink-0 hero-shine">
+
+      <!-- Avatar Container -->
+      <div class="relative w-full aspect-[4/3] bg-slate-950 overflow-hidden avatar-frame">
+        <img id="avatar-image" src="" alt="Patient Avatar" class="w-full h-full object-cover transition-opacity duration-500 opacity-90"/>
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/10 to-transparent opacity-90"></div>
+
+        <!-- Clinical Overlay (EHR) -->
+        <div class="absolute inset-0 bg-slate-900/95 backdrop-blur-md flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-10 p-6 text-center" id="clinical-overlay">
+          <div class="w-full aspect-[4/3] bg-white mb-4 rounded-xl overflow-hidden border border-slate-300 relative shadow-2xl">
+            <div class="absolute top-2 right-2 z-20">
+              <span class="text-[10px] uppercase font-black tracking-widest bg-navy text-white px-3 py-1.5 rounded-full shadow-md">
+                EHR DATA <span id="bsa-pct" class="ml-1 text-blue-300"></span>
+              </span>
+            </div>
+            <img class="w-full h-full object-contain p-2 clinical-zoom bg-slate-50" id="clinical-image" src="" alt="Clinical Data"/>
+            <div class="absolute inset-0 z-10 pointer-events-none" id="hotspot-layer"></div>
           </div>
+          <h3 class="text-white font-black text-2xl mb-2" id="clinical-title">Laboratory Results</h3>
+          <p class="text-blue-200 text-sm leading-relaxed max-w-xs mx-auto font-medium" id="clinical-desc">Description</p>
+          <button class="mt-6 px-6 py-2.5 bg-white text-slate-900 rounded-full font-bold text-sm hover:bg-slate-100 transition-colors flex items-center gap-2 shadow-lg" id="btn-return">
+            <span class="material-symbols-outlined text-lg">close</span> Close Chart
+          </button>
         </div>
-        <button class="md:hidden text-white/70 hover:text-white" onclick="toggleSidebar()">
-          <span class="material-symbols-outlined">close</span>
+
+        <!-- Examine Button -->
+        <button class="absolute bottom-4 right-4 floating-chip text-navy px-4 py-2.5 rounded-full font-bold text-xs uppercase tracking-wider flex items-center gap-2 hover:bg-white hover:scale-105 transition-all z-0" id="btn-examine">
+          <span class="material-symbols-outlined text-blue-600 text-lg">folder_shared</span> Open EHR
         </button>
       </div>
-    </div>
 
-    <div class="px-5 py-4 border-b border-white/10 sidebar-section">
-      <div class="mt-4">
-        <div class="flex items-center justify-between text-xs uppercase tracking-[0.18em] text-blue-100/70 mb-2">
-          <span>Progress</span>
-          <span id="progress-text">1 / 10</span>
-        </div>
-        <div class="progress-track bg-white/10">
-          <div id="progress-fill" class="progress-fill"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="px-4 py-4 overflow-y-auto custom-scroll flex-1 sidebar-section">
-      <div class="mb-5 grid grid-cols-3 gap-2 desktop-stats">
-        <div class="rounded-2xl bg-white/6 border border-white/8 p-3">
-          <div class="text-[11px] uppercase tracking-[0.14em] text-blue-100/65">Gaps</div>
-          <div class="text-xl font-black mt-1">3</div>
-        </div>
-        <div class="rounded-2xl bg-white/6 border border-white/8 p-3">
-          <div class="text-[11px] uppercase tracking-[0.14em] text-blue-100/65">Cases</div>
-          <div class="text-xl font-black mt-1">3</div>
-        </div>
-        <div class="rounded-2xl bg-white/6 border border-white/8 p-3">
-          <div class="text-[11px] uppercase tracking-[0.14em] text-blue-100/65">Quiz</div>
-          <div class="text-xl font-black mt-1">3</div>
-        </div>
-      </div>
-
-      <p class="text-[11px] text-blue-100/60 px-2 mb-4 uppercase tracking-[0.25em] font-semibold">Curriculum</p>
-      <div id="nav-container" class="space-y-5"></div>
-    </div>
-
-  </aside>
-
-
-
-<!-- Overlay for mobile -->
-<div id="sidebar-overlay" class="fixed inset-0 bg-slate-950/50 backdrop-blur-sm z-20 hidden md:hidden" onclick="toggleSidebar()"></div>
-
-<!-- Main Content -->
-<div class="flex-1 flex flex-col h-full overflow-hidden relative">
-    
-
-
-    <header class="sticky top-0 z-20 px-4 md:px-6 pt-4 md:pt-5">
-      <div class="glass-panel rounded-[1.35rem] px-4 md:px-5 py-3">
-        <div class="flex items-center justify-between gap-4">
-          <div class="flex items-center gap-4 min-w-0">
-            <button class="md:hidden p-2 rounded-xl hover:bg-slate-100 text-slate-700" onclick="toggleSidebar()">
-              <span class="material-symbols-outlined">menu</span>
-            </button>
-            <div class="min-w-0">
-              <div class="text-[11px] uppercase tracking-[0.22em] text-slate-500 font-semibold">PARP Inhibitors in Metastatic Prostate Cancer</div>
-              <div class="flex items-center gap-2 text-sm md:text-base mt-1 min-w-0">
-                <span id="breadcrumb-module" class="font-black text-slate-900 truncate">Module</span>
-                <span class="material-symbols-outlined text-blue-600 text-[18px]">chevron_right</span>
-                <span id="breadcrumb-section" class="font-semibold text-slate-600 truncate">Section</span>
-              </div>
+      <!-- Patient Vitals -->
+      <div class="p-6 flex-1 bg-gradient-to-b from-white/70 via-white/50 to-slate-50/70">
+        <div class="flex justify-between items-start mb-5">
+          <div>
+            <h2 class="text-3xl font-black text-slate-900 tracking-tight title-glow" id="patient-name">Name</h2>
+            <p class="text-slate-500 text-sm font-medium mt-1" id="patient-demographics">Demographics</p>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <span class="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-[10px] font-black uppercase tracking-[0.18em]">Precision Oncology</span>
+              <span class="px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-[0.18em]">Patient Simulation</span>
             </div>
           </div>
+          <div class="px-3 py-1 bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-black rounded uppercase tracking-widest" id="vibe-badge">Vibe</div>
+        </div>
 
-          <div class="hidden md:flex items-center gap-3">
-            
-            
+        <div class="space-y-4">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+            <div class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-1.5">Chief Complaint</div>
+            <p class="text-sm text-slate-700 italic font-medium" id="patient-complaint">Complaint</p>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Diagnosis</div>
+              <div class="font-black text-slate-800 text-sm truncate" id="patient-duration">mCRPC</div>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+              <div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Current Rx</div>
+              <div class="font-black text-slate-800 text-sm truncate" id="patient-rx">Rx</div>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-slate-100">
+            <div class="flex items-center gap-2 text-xs font-black text-slate-400 uppercase tracking-widest mb-2">
+              <span class="material-symbols-outlined text-[16px]">psychology</span> Clinical Mindset
+            </div>
+            <p class="text-sm text-slate-600 leading-relaxed font-medium" id="patient-mindset">Mindset</p>
           </div>
         </div>
       </div>
-    </header>
+    </section>
 
+    <!-- Right Panel: Interaction & Curriculum -->
+    <section class="flex-1 flex flex-col glass-panel rounded-3xl relative overflow-hidden hero-shine">
+      <!-- Tabs -->
+      <div class="premium-divider bg-gradient-to-r from-white/75 via-blue-50/50 to-white/70 px-4 md:px-6 py-5 shrink-0">
+        <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
+          <div>
+            <div class="text-[10px] font-black tracking-[0.15em] uppercase text-blue-600 mb-1">Simulation Pathway</div>
+            <div class="text-sm text-slate-600 font-medium">Navigate diagnostic data, patient consult, and competence verification.</div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2 text-sm" id="module-tabs">
+            <button class="module-tab active" data-tab="content" type="button"><span class="material-symbols-outlined text-[18px]">menu_book</span><span>Briefing</span></button>
+            <button class="module-tab" data-tab="consult" type="button"><span class="material-symbols-outlined text-[18px]">forum</span><span>Consult</span></button>
+            <button class="module-tab" data-tab="competence" type="button"><span class="material-symbols-outlined text-[18px]">quiz</span><span>Assessment</span></button>
+            <button class="module-tab" data-tab="resources" type="button"><span class="material-symbols-outlined text-[18px]">library_books</span><span>Evidence</span></button>
+          </div>
+        </div>
+      </div>
 
+      <!-- Dynamic Stage -->
+      <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-gradient-to-b from-white/55 to-slate-50/55 custom-scroll relative" id="chat-container"></div>
 
-    <main id="main-content" class="flex-1 overflow-y-auto px-4 md:px-6 pb-8 pt-4 custom-scroll">
-        <!-- Content Injected Here -->
-    </main>
+      <!-- Bottom Control Bar -->
+      <div class="premium-divider p-5 bg-gradient-to-r from-white/70 via-slate-50/80 to-white/70 shrink-0 z-20" id="interaction-area">
+         <!-- Injected via JS -->
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Completion Modal -->
+<div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" id="completion-modal">
+  <div class="glass-panel rounded-3xl max-w-md w-full p-8 transform scale-95 opacity-0 transition-all duration-300 hero-shine"
+       id="modal-content">
+    <div class="w-20 h-20 bg-green-50 border-4 border-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <span class="material-symbols-outlined text-green-500 text-5xl">task_alt</span>
+    </div>
+    <h2 class="text-3xl font-black text-center text-slate-900 mb-2 tracking-tight">Case Complete</h2>
+    <p class="text-center text-slate-500 font-medium mb-8">Clinical reasoning validated.</p>
+
+    <div class="bg-blue-50 border border-blue-100 rounded-xl p-5 mb-8">
+      <h4 class="text-[10px] font-black text-blue-600 uppercase tracking-widest mb-2">Practice Pearl</h4>
+      <p class="text-sm text-blue-900 font-medium leading-relaxed" id="modal-takeaway">Takeaway text</p>
+    </div>
+
+    <button class="w-full py-3.5 bg-[#002147] text-white rounded-xl font-bold uppercase tracking-wider hover:bg-blue-900 transition-colors shadow-lg shadow-blue-900/20"
+            id="btn-next" onclick="closeModalAndAssess()">
+      Proceed to Next Session
+    </button>
+  </div>
 </div>
 
 <script>
-    // --- Data Configuration ---
-    const appData = {
-        modules: {
-            'gap-1': {
-                title: 'HRR Testing and Diagnostic Workflow',
-                color: 'blue',
-                sections: [
-                    { id: 'intro', title: '', icon: 'biotech' },
-                    { id: 'guidelines', title: 'Guidelines and Workflow Actions', icon: 'menu_book' },
-                    { id: 'case-marcus', title: 'Case Study: Marcus', icon: 'person' },
-                ]
-            },
-            'gap-2': {
-                title: 'PARPi Efficacy, Sequencing, and Shared Decisions',
-                color: 'purple',
-                sections: [
-                    { id: 'intro', title: 'Targeted Therapy Gap', icon: 'target' },
-                    { id: 'pathways', title: 'Treatment Landscape', icon: 'alt_route' },
-                    { id: 'case-arthur', title: 'Case Study: Arthur', icon: 'engineering' },
-                ]
-            },
-            'gap-3': {
-                title: 'AE Management Through the MDT',
-                color: 'rose',
-                sections: [
-                    { id: 'intro', title: 'Adverse Event Management', icon: 'warning' },
-                    { id: 'mdt', title: 'MDT Coordination', icon: 'groups' },
-                    { id: 'case-james', title: 'Case Study: James', icon: 'account_circle' },
-                ]
-            },
-            'resources': {
-                title: 'Summary',
-                color: 'indigo',
-                sections: [
-                    { id: 'summary', title: 'Clinical Takeaways', icon: 'fact_check' },
-                ]
-            }
-        }
-    };
+  // SVG Image Generator for local demo functionality
+  window.__missingImgSvg = (label, icon) => {
+    const svg = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900">
+        <defs>
+          <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#071226"/>
+            <stop offset="48%" stop-color="#0f1f3b"/>
+            <stop offset="100%" stop-color="#172b52"/>
+          </linearGradient>
+          <radialGradient id="glow" cx="82%" cy="16%" r="42%">
+            <stop offset="0%" stop-color="rgba(59,130,246,0.55)"/>
+            <stop offset="100%" stop-color="rgba(59,130,246,0)"/>
+          </radialGradient>
+        </defs>
+        <rect width="1200" height="900" fill="url(#bg)"/>
+        <rect width="1200" height="900" fill="url(#glow)"/>
+        <g opacity="0.08" stroke="#93c5fd" stroke-width="1">
+          <path d="M0 160 H1200"/><path d="M0 320 H1200"/><path d="M0 480 H1200"/><path d="M0 640 H1200"/>
+          <path d="M180 0 V900"/><path d="M360 0 V900"/><path d="M540 0 V900"/><path d="M720 0 V900"/><path d="M900 0 V900"/>
+        </g>
+        <rect x="84" y="86" width="1032" height="728" rx="36" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.14)"/>
+        <rect x="126" y="126" width="948" height="648" rx="28" fill="rgba(255,255,255,0.03)" stroke="rgba(148,163,184,0.16)"/>
+        <g transform="translate(600 340)">
+          <circle r="92" fill="rgba(96,165,250,0.16)" stroke="rgba(191,219,254,0.45)" stroke-width="2"/>
+          <text x="0" y="18" text-anchor="middle" fill="#eff6ff" font-family="Arial" font-weight="700" font-size="90">${icon}</text>
+        </g>
+        <text x="600" y="518" text-anchor="middle" fill="#e2e8f0" font-family="Arial" font-weight="700" font-size="54">${label}</text>
+        <text x="600" y="588" text-anchor="middle" fill="#93c5fd" font-family="Arial" font-weight="700" font-size="24" letter-spacing="6">REAL WORLD CE • PRECISION ONCOLOGY</text>
+      </svg>`;
+    return "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(svg);
+  };
 
-    let activeModuleId = 'gap-1';
-    let activeSectionId = 'intro';
-    let quizStates = {};
+  // --- DATA ---
+  const imageAssets = {
+    thomas: "assets/thomas.png",
+    marcus: "assets/marcus.png",
+    david: "assets/david.png",
+    william: "assets/william.png"
+  };
 
-    function getAllSections() {
-      const list = [];
-      for (const [moduleId, module] of Object.entries(appData.modules)) {
-        module.sections.forEach(section => list.push({ moduleId, ...section, moduleTitle: module.title, color: module.color }));
+  const sessions = [
+    {
+      id: 1, title: "The Biomarker Gap",
+      patient: {
+        name: "Thomas", age: 68, job: "Retired Teacher", vibe: "Confused",
+        avatarSrc: imageAssets.thomas,
+        clinicalSrc: window.__missingImgSvg('PSA: 18.4 ng/mL (Rising)', '📈'),
+        clinicalTitle: "EHR: Recent Labs",
+        clinicalDesc: "PSA is rising despite castrate levels of testosterone. No HRRm testing on file.",
+        clinicalViews: {
+          exam: { src: window.__missingImgSvg('PSA: 18.4 ng/mL (Rising)', '📈'), bsa: "mCRPC", hotspots: [
+            { x: 50, y: 40, label: "Rising PSA", note: "Indicates progression to Castration-Resistant Prostate Cancer (CRPC)." },
+            { x: 50, y: 70, label: "Missing HRRm Panel", note: "Over 40% of patients do not receive timely genetic testing, delaying targeted therapy." }
+          ]}
+        },
+        complaint: "My PSA is going up again. What's next?", duration: "mCRPC", rx: "ADT alone",
+        mindset: "Unaware of advanced biomarker testing options. Believes he has run out of treatment avenues."
+      },
+      scenario: {
+        intro: "Thomas presents for a follow-up. His PSA has doubled in the last 4 months despite ADT. His chart shows no prior genomic testing.",
+        steps: [
+          { id:"start", bot:"Doctor, the nurse said my PSA is rising again. Does this mean the hormone shots stopped working? Are we out of options?", options:[
+              {text:"Unfortunately, hormone therapy fails over time. We will just monitor it for now.", next:"fail_1"},
+              {text:"It means the cancer is resisting the hormones. We need to run a genetic test to find targeted options.", next:"success_1"},
+              {text:"We should switch you to chemotherapy immediately.", next:"neutral_1"}
+            ]},
+          { id:"fail_1", bot:"So we just wait for it to get worse? That doesn't sound right.", feedback:"You failed to introduce HRRm testing. Real-world data shows a 16-month average delay in biomarker testing.", isEnd:true, success:false },
+          { id:"neutral_1", bot:"Chemo? Already? Isn't there anything else we can try first?", options:[
+              {text:"Actually, yes. We should do genetic testing first to see if you qualify for targeted pills.", next:"success_1"},
+              {text:"No, chemo is the standard next step.", next:"fail_1"}
+            ]},
+          { id:"success_1", bot:"Genetic testing? Like for inherited traits? Will that tell us which drug to use?", feedback:"You accurately identified the gap. Timely biomarker testing is essential for selecting effective PARPi therapy.", isEnd:true, success:true, takeaway:"Ensure timely HRR mutation testing. Delays prevent access to targeted PARPi treatments." }
+        ]
+      },
+      content: {
+          title: 'The Biomarker Testing Gap in mPC',
+          summary: 'Despite clinical guidelines, practitioners do not always include homologous recombination repair (HRR) mutation testing in the metastatic Prostate Cancer (mPC) diagnostic workflow.',
+          stats: [
+              { title: 'Missing Data', val: '40%', desc: 'Nearly half of eligible patients either do not receive genetic testing or experience significant delays.', icon: 'warning' },
+              { title: 'Delayed Care', val: '16 mo', desc: 'The average gap between mPC diagnosis and first biomarker testing, resulting in untargeted treatment.', icon: 'schedule' }
+          ],
+          pearls: ['Do not wait for castration resistance to order testing.', 'Rising PSA on ADT signifies CRPC progression.', 'Coordinate with pathology for adequate tissue sampling.']
+      },
+      quiz: {
+          q: "Based on real-world data, what is the average delay between mPC diagnosis and first biomarker testing?",
+          choices: ["3 months", "6 months", "16 months", "24 months"], answer: 2,
+          explanation: "There is a documented 16-month gap between diagnosis and first biomarker testing for many patients, representing a significant delay in access to targeted therapies."
       }
-      return list;
-    }
-
-    function getSectionIndex(moduleId, sectionId) {
-      const all = getAllSections();
-      return all.findIndex(item => item.moduleId === moduleId && item.id === sectionId);
-    }
-
-    function getProgressPercent() {
-      const index = getSectionIndex(activeModuleId, activeSectionId);
-      const total = getAllSections().length;
-      return ((index + 1) / total) * 100;
-    }
-
-    function colorClasses(color) {
-      const map = {
-        rose: {
-          banner: 'gradient-rose',
-          accentBtn: 'bg-rose-600 hover:bg-rose-700',
-          text: 'text-rose-700',
-          soft: 'bg-rose-50 border-rose-100',
-          badge: 'bg-rose-100 text-rose-700 border-rose-200',
-          ring: 'ring-rose-200',
-          gradientText: 'from-rose-500 to-pink-500'
+    },
+    {
+      id: 2, title: "Explaining Mechanisms",
+      patient: {
+        name: "Marcus", age: 72, job: "Architect", vibe: "Analytical",
+        avatarSrc: imageAssets.marcus,
+        clinicalSrc: window.__missingImgSvg('HRRm Panel: BRCA2 Positive', '🧬'),
+        clinicalTitle: "EHR: NGS Panel",
+        clinicalDesc: "Next-Generation Sequencing confirms a pathogenic BRCA2 mutation.",
+        clinicalViews: {
+          exam: { src: window.__missingImgSvg('HRRm Panel: BRCA2 Positive', '🧬'), bsa: "BRCA2+", hotspots: [
+            { x: 50, y: 50, label: "BRCA2 Mutation", note: "Makes the tumor highly susceptible to PARP inhibitors via synthetic lethality." }
+          ]}
         },
-        blue: {
-          banner: 'gradient-blue',
-          accentBtn: 'bg-blue-600 hover:bg-blue-700',
-          text: 'text-blue-700',
-          soft: 'bg-blue-50 border-blue-100',
-          badge: 'bg-blue-100 text-blue-700 border-blue-200',
-          ring: 'ring-blue-200',
-          gradientText: 'from-blue-500 to-cyan-500'
+        complaint: "What does this PARP inhibitor actually do?", duration: "mCRPC", rx: "Enzalutamide",
+        mindset: "Wants to understand the exact mechanism before agreeing to add a new medication."
+      },
+      scenario: {
+        intro: "Marcus has a confirmed BRCA2 mutation. You are discussing the addition of a PARP inhibitor to his regimen.",
+        steps: [
+          { id:"start", bot:"I read the genomic report. It says I have a BRCA2 mutation. You mentioned a 'PARP inhibitor'—how does that work? Is it just going to destroy all my healthy cells?", options:[
+              {text:"It's a type of chemotherapy that kills all fast-growing cells.", next:"fail_2"},
+              {text:"It works through 'synthetic lethality'. It only destroys cells that already have the BRCA mutation.", next:"success_2"},
+              {text:"It blocks testosterone in a different way than your current shots.", next:"fail_2"}
+            ]},
+          { id:"fail_2", bot:"I thought you said this was a targeted therapy?", feedback:"You mischaracterized the MOA. PARP inhibitors are targeted therapies, not traditional systemic chemotherapy or ADT.", isEnd:true, success:false },
+          { id:"success_2", bot:"'Synthetic lethality'... so because the cancer cells already have broken DNA repair, blocking PARP pushes them over the edge?", feedback:"You accurately explained the PARPi MOA. Clear communication of MOA improves patient understanding and adherence.", isEnd:true, success:true, takeaway:"Explain 'synthetic lethality'. PARPis block single-strand DNA repair, which is fatal to cancer cells that already lack double-strand repair." }
+        ]
+      },
+      content: {
+          title: 'Synthetic Lethality',
+          summary: 'Clinicians must understand the rationale for using PARP inhibitors. The foundation of this targeted therapy is the concept of synthetic lethality.',
+          stats: [
+              { title: 'Step 1', val: 'PARP', desc: 'PARP enzymes repair single-strand DNA breaks. Inhibitors block this.', icon: 'science' },
+              { title: 'Step 2', val: 'BRCA', desc: 'Tumors with HRR mutations (BRCA) cannot repair double-strand breaks, leading to targeted cell death.', icon: 'genetics' }
+          ],
+          pearls: ['PARPis target specific DNA repair vulnerabilities.', 'Explain "synthetic lethality" in plain language.', 'Somatic testing finds the lock; PARP is the key.']
+      },
+      quiz: {
+          q: "What is 'synthetic lethality' in the context of PARP inhibitors?",
+          choices: ["The combination of two chemo drugs causing cytotoxicity.", "Targeted cell death occurring when two non-lethal defects combine.", "The suppression of testosterone production."], answer: 1,
+          explanation: "Synthetic lethality exploits the tumor's existing genetic defect (HRRm) by therapeutically blocking its backup repair mechanism (PARP), causing targeted cell death."
+      }
+    },
+    {
+      id: 3, title: "Managing Toxicity",
+      patient: {
+        name: "David", age: 65, job: "Business Owner", vibe: "Fatigued",
+        avatarSrc: imageAssets.david,
+        clinicalSrc: window.__missingImgSvg('Hemoglobin: 8.5 g/dL', '🩸'),
+        clinicalTitle: "EHR: CBC Trend",
+        clinicalDesc: "Patient presents with Grade 2/3 anemia after 8 weeks on PARP inhibitor therapy.",
+        clinicalViews: {
+          exam: { src: window.__missingImgSvg('Hemoglobin: 8.5 g/dL', '🩸'), bsa: "Grade 2 Anemia", hotspots: [
+            { x: 50, y: 50, label: "Hb 8.5 g/dL", note: "Anemia is a common class effect of PARPis, often requiring dose interruption or reduction." }
+          ]}
         },
-        emerald: {
-          banner: 'gradient-emerald',
-          accentBtn: 'bg-emerald-600 hover:bg-emerald-700',
-          text: 'text-emerald-700',
-          soft: 'bg-emerald-50 border-emerald-100',
-          badge: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-          ring: 'ring-emerald-200',
-          gradientText: 'from-emerald-500 to-teal-500'
+        complaint: "This new pill is making me so exhausted.", duration: "2 mo on PARPi", rx: "PARPi + ADT",
+        mindset: "Considering stopping the drug entirely because the fatigue is impacting his livelihood."
+      },
+      scenario: {
+        intro: "David has been on a PARPi for 8 weeks. He is severely fatigued, and his Hemoglobin has dropped to 8.5 g/dL.",
+        steps: [
+          { id:"start", bot:"Doc, I can't keep taking this pill. I'm so exhausted I fall asleep at my desk. Should I just stop taking it completely?", options:[
+              {text:"Yes, if the fatigue is that bad, we should stop the drug permanently.", next:"fail_3"},
+              {text:"Let's pause the drug temporarily until your blood counts recover, then restart at a lower dose.", next:"success_3"},
+              {text:"Fatigue is normal. You just need to push through it. Keep taking the full dose.", next:"fail_3"}
+            ]},
+          { id:"fail_3", bot:"Okay, I hope the cancer doesn't come back too fast.", feedback:"Discontinuing effective therapy prematurely or ignoring Grade 3 anemia is dangerous. Dose modification is required.", isEnd:true, success:false },
+          { id:"success_3", bot:"So taking a break won't let the cancer grow out of control? And a lower dose will still help?", feedback:"You appropriately managed a common PARPi toxicity. Dose interruptions and reductions are standard practice.", isEnd:true, success:true, takeaway:"Anemia is a common PARPi toxicity. Use dose interruptions and step-down reductions to keep patients safely on therapy." }
+        ]
+      },
+      content: {
+          title: 'Managing Class Effects',
+          summary: 'Clinicians must be prepared to manage predictable adverse events associated with PARP inhibitors using a multidisciplinary care team to prevent unnecessary discontinuation.',
+          stats: [
+              { title: 'Anemia', val: 'Grade 3', desc: 'The most common AE requiring intervention. Protocol: Interrupt -> Reduce -> Support.', icon: 'bloodtype' },
+              { title: 'GI & Fatigue', val: 'Early', desc: 'Nausea and fatigue are common early but become manageable with antiemetics and education.', icon: 'stomach' }
+          ],
+          pearls: ['Do not permanently discontinue at the first sign of anemia.', 'Use dose interruptions followed by step-down dosing.', 'Oncology nurses are crucial for proactive toxicity monitoring.']
+      },
+      quiz: {
+          q: "A patient on a PARP inhibitor develops Grade 3 anemia (Hb 7.5 g/dL). What is the recommended management?",
+          choices: ["Permanently discontinue the PARP inhibitor.", "Interrupt therapy until recovery, then restart at a reduced dose.", "Continue current dose and prescribe iron supplements."], answer: 1,
+          explanation: "Dose interruption followed by a dose reduction is the standard protocol to manage PARPi-induced anemia while keeping the patient on effective targeted therapy."
+      }
+    },
+    {
+      id: 4, title: "Somatic vs Germline",
+      patient: {
+        name: "Robert", age: 55, job: "Accountant", vibe: "Anxious",
+        avatarSrc: "assets/robert.png",
+        clinicalSrc: window.__missingImgSvg('Somatic BRCA2 Detected', '🧬'),
+        clinicalTitle: "EHR: Genomic Report",
+        clinicalDesc: "Somatic panel indicates pathogenic BRCA2 mutation. Germline status unknown.",
+        clinicalViews: {
+          exam: { src: window.__missingImgSvg('Somatic BRCA2 Detected', '🧬'), bsa: "Somatic +", hotspots: [
+            { x: 50, y: 50, label: "Somatic BRCA2", note: "This was found in the tumor tissue, but could be an inherited (germline) mutation." }
+          ]}
         },
-        purple: {
-          banner: 'gradient-indigo',
-          accentBtn: 'bg-indigo-600 hover:bg-indigo-700',
-          text: 'text-indigo-700',
-          soft: 'bg-indigo-50 border-indigo-100',
-          badge: 'bg-indigo-100 text-indigo-700 border-indigo-200',
-          ring: 'ring-indigo-200',
-          gradientText: 'from-indigo-500 to-sky-500'
+        complaint: "If I have a BRCA gene, are my daughters at risk?", duration: "Newly dx mCRPC", rx: "Enzalutamide",
+        mindset: "Highly concerned about familial risk and wants genetic counseling."
+      },
+      scenario: {
+        intro: "Robert's tumor testing just returned positive for a BRCA2 mutation. He has two adult daughters and is extremely anxious about their cancer risk.",
+        steps: [
+          { id:"start", bot:"I saw the test results. It says BRCA2. I know that's the breast cancer gene. Are my daughters going to get cancer because of me?", options:[
+              {text:"The test only looked at your tumor, so your daughters are perfectly safe.", next:"fail_4"},
+              {text:"We found it in your tumor, but it could be inherited. We need to do a germline blood test and refer you to genetic counseling.", next:"success_4"},
+              {text:"Yes, they have a 50% chance of getting it. They should get preventive surgery.", next:"fail_4_b"}
+            ]},
+          { id:"fail_4", bot:"Oh, thank God. That's a huge relief.", feedback:"You provided false reassurance. Up to 11% of men with mPC have a germline HRR mutation. Somatic testing alone does not rule out germline risk.", isEnd:true, success:false },
+          { id:"fail_4_b", bot:"What?! That's terrifying!", feedback:"You caused unnecessary panic. While there is a risk, a confirmed germline test and proper genetic counseling are required before making familial recommendations.", isEnd:true, success:false },
+          { id:"success_4", bot:"Okay, so we don't know for sure yet, but we can test my blood to find out? That makes sense. I'd like to speak to the counselor.", feedback:"You accurately navigated the somatic vs. germline distinction. Recommending genetic counseling ensures proper cascade testing for family members.", isEnd:true, success:true, takeaway:"A somatic HRR mutation requires follow-up germline testing and genetic counseling to assess familial risk (cascade testing)." }
+        ]
+      },
+      content: {
+          title: 'Somatic vs. Germline Testing',
+          summary: 'Identifying an HRR mutation in a tumor (somatic) has immediate therapeutic implications for the patient, but also requires evaluating inherited (germline) risk for their family members.',
+          stats: [
+              { title: 'Somatic', val: 'Tumor', desc: 'Mutations found only in the cancer cells. Guides PARPi therapy selection.', icon: 'biotech' },
+              { title: 'Germline', val: 'Inherited', desc: 'Mutations found in all cells (via blood/saliva). Indicates familial cancer risk.', icon: 'family_history' }
+          ],
+          pearls: ['Over 10% of mPC patients have an inherited HRR mutation.', 'A positive somatic test warrants a germline test confirmation.', 'Always involve a genetic counselor for cascade testing.']
+      },
+      quiz: {
+          q: "A patient's somatic (tumor) NGS panel returns positive for a BRCA2 mutation. What is the most appropriate next step regarding their family's risk?",
+          choices: ["Reassure the patient that somatic mutations cannot be passed down.", "Refer the patient for germline testing and genetic counseling.", "Immediately test all first-degree relatives with somatic panels."], answer: 1,
+          explanation: "A positive somatic finding could represent an underlying germline (inherited) mutation. Germline testing and professional genetic counseling are required to properly assess and manage familial risk."
+      }
+    },
+    {
+      id: 5, title: "Care Coordination",
+      patient: {
+        name: "William", age: 75, job: "Retired Veteran", vibe: "Overwhelmed",
+        avatarSrc: imageAssets.william,
+        clinicalSrc: window.__missingImgSvg('Referral: Urology to Oncology', '🤝'),
+        clinicalTitle: "EHR: Care Transition",
+        clinicalDesc: "Patient transitioning from urology to medical oncology after developing castrate resistance.",
+        clinicalViews: {
+          exam: { src: window.__missingImgSvg('Referral: Urology to Oncology', '🤝'), bsa: "Transition", hotspots: [
+            { x: 50, y: 50, label: "Multidisciplinary Handoff", note: "Seamless communication between urology and oncology prevents treatment delays." }
+          ]}
         },
-        indigo: {
-          banner: 'gradient-indigo',
-          accentBtn: 'bg-indigo-600 hover:bg-indigo-700',
-          text: 'text-indigo-700',
-          soft: 'bg-indigo-50 border-indigo-100',
-          badge: 'bg-indigo-100 text-indigo-700 border-indigo-200',
-          ring: 'ring-indigo-200',
-          gradientText: 'from-indigo-500 to-sky-500'
-        }
-      };
-      return map[color] || map.blue;
+        complaint: "I'm seeing too many doctors. Who is actually in charge?", duration: "mCRPC transition", rx: "Lupron + Enzalutamide",
+        mindset: "Overwhelmed by the fragmented healthcare system and transition of care."
+      },
+      scenario: {
+        intro: "William was recently referred to your medical oncology clinic by his urologist after his PSA began rising on ADT. He is frustrated by the disjointed care process.",
+        steps: [
+          { id:"start", bot:"First it was my urologist, now it's you, and someone else called me about a genetic test. I'm completely overwhelmed. Who is actually directing my treatment?", options:[
+              {text:"I am your oncologist, so I am in charge now. You won't need the urologist anymore.", next:"fail_5"},
+              {text:"We all work as a multidisciplinary team. The urologist monitors the prostate locally, while I manage the advanced medications like PARP inhibitors.", next:"success_5"},
+              {text:"The genetic counselor is in charge of your next steps.", next:"fail_5_b"}
+            ]},
+          { id:"fail_5", bot:"But my urologist has known me for 10 years! I don't want to just drop him.", feedback:"You created an artificial silo. Co-management between urology and oncology is standard for advanced prostate cancer to maintain continuity and trust.", isEnd:true, success:false },
+          { id:"fail_5_b", bot:"So a counselor is treating my cancer? This doesn't make any sense.", feedback:"You confused the patient about the roles of the care team. The oncologist/urologist directs treatment, not the genetic counselor.", isEnd:true, success:false },
+          { id:"success_5", bot:"Okay, so you guys actually talk to each other? That makes me feel a lot better. I just want to know there's a plan.", feedback:"You reassured the patient by emphasizing a coordinated, multidisciplinary approach, which is vital for managing mPC and PARPi therapy.", isEnd:true, success:true, takeaway:"Multidisciplinary care ensures continuity, prevents biomarker testing delays, and improves the patient experience." }
+        ]
+      },
+      content: {
+          title: 'Multidisciplinary Care Integration',
+          summary: 'Prostate cancer treatment spans multiple specialties. A siloed approach leads to delayed biomarker testing and fragmented care. Coordinated multidisciplinary teams (MDTs) are essential.',
+          stats: [
+              { title: 'Urology', val: 'Early', desc: 'Often the first to identify CRPC progression and can initiate biomarker testing workflows early.', icon: 'local_hospital' },
+              { title: 'Oncology', val: 'Targeted', desc: 'Drives advanced systemic and targeted therapies, managing complex PARPi toxicities.', icon: 'medication' }
+          ],
+          pearls: ['Co-management prevents patients from falling through the cracks.', 'Urologists can and should order HRRm panels upon mCRPC transition.', 'Nurse navigators are critical for guiding patients through the MDT.']
+      },
+      quiz: {
+          q: "To prevent delays in targeted therapy access, which team member is often ideally positioned to initiate biomarker testing as the patient transitions to mCRPC?",
+          choices: ["The patient's primary care physician.", "The urologist managing the initial ADT failure.", "The pharmacist dispensing the PARP inhibitor."], answer: 1,
+          explanation: "Urologists are frequently the first to detect castration resistance (mCRPC). Initiating biomarker testing at this transition point prevents the 16-month delays often seen in real-world data."
+      }
     }
+  ];
 
-    function renderHero(moduleId, kicker, title, text, stats = []) {
-      const statsHtml = stats.map(stat => `
-        <div class="stat-card lift">
-          <div class="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-bold">${stat.label}</div>
-          <div class="text-3xl font-black text-slate-900 mt-2">${stat.value}</div>
-          <div class="text-sm text-slate-600 mt-2 leading-relaxed">${stat.copy}</div>
-        </div>
-      `).join('');
+  // --- STATE ---
+  let currentSessionIdx = 0;
+  let activeTab = 'content';
+  let completedSessions = [];
+  let consultedSessions = [];
+  let quizPassedSessions = [];
 
+  // --- DOM CACHE ---
+  const dom = {};
+
+  // --- CORE FUNCTIONS ---
+  function toggleSidebar() {
+    const isClosed = dom.sidebar.classList.contains('-translate-x-full');
+    dom.sidebar.classList.toggle('-translate-x-full', !isClosed);
+    dom.overlay.classList.toggle('hidden', !isClosed);
+  }
+
+  function toggleExamine() {
+    const isVisible = dom.clinicalOverlay.classList.contains('opacity-100');
+    if (isVisible) {
+      dom.clinicalOverlay.classList.remove('opacity-100', 'pointer-events-auto', 'zoomed');
+      dom.clinicalOverlay.classList.add('opacity-0', 'pointer-events-none');
+      document.getElementById('hotspot-layer').innerHTML = '';
+      document.getElementById('bsa-pct').textContent = '';
+      return;
+    }
+    
+    const views = sessions[currentSessionIdx].patient.clinicalViews;
+    if (views && views.exam) {
+        dom.clinicalImg.src = views.exam.src;
+        document.getElementById('bsa-pct').textContent = views.exam.bsa;
+        renderHotspots(views.exam.hotspots || []);
+    }
+    
+    dom.clinicalOverlay.classList.remove('opacity-0', 'pointer-events-none');
+    dom.clinicalOverlay.classList.add('opacity-100', 'pointer-events-auto');
+    setTimeout(() => dom.clinicalOverlay.classList.add('zoomed'), 20);
+  }
+
+  function renderHotspots(hotspots) {
+    const layer = document.getElementById('hotspot-layer');
+    layer.innerHTML = '';
+    hotspots.forEach(h => {
+      const hs = document.createElement('div');
+      hs.className = 'hotspot';
+      hs.style.left = (h.x || 50) + '%';
+      hs.style.top = (h.y || 50) + '%';
+      
+      const tip = document.createElement('div');
+      tip.className = 'tooltip';
+      tip.style.left = hs.style.left;
+      tip.style.top = hs.style.top;
+      tip.innerHTML = `<div class="font-bold text-white mb-1.5 uppercase tracking-wider text-[10px] text-blue-400">${h.label}</div><div class="text-slate-200">${h.note}</div>`;
+      
+      layer.appendChild(hs);
+      layer.appendChild(tip);
+    });
+  }
+
+  function updateProgress() {
+    const pct = Math.round((completedSessions.length / sessions.length) * 100);
+    dom.progressBar.style.width = `${pct}%`;
+    dom.progressText.innerText = `${pct}%`;
+  }
+
+  function renderSessionList() {
+    dom.sessionList.innerHTML = sessions.map((s, idx) => {
+      const done = completedSessions.includes(idx);
+      const active = idx === currentSessionIdx;
+      const icon = done ? 'check_circle' : 'radio_button_unchecked';
+      const color = done ? 'text-green-500' : 'text-slate-300';
+      
       return `
-        <section class="section-shell slide-up">
-          <div class="hero-mesh rounded-[2rem] p-6 md:p-8 shadow-[0_28px_80px_rgba(15,23,42,.18)] border border-white/10 text-white">
-            <div class="floating-orb orb-a"></div>
-            <div class="floating-orb orb-b"></div>
-            <div class="floating-orb orb-c"></div>
-            <div class="relative z-10 flex flex-col gap-8">
-              <div class="flex flex-col xl:flex-row xl:items-end xl:justify-between gap-6 hero-actions">
-                <div class="max-w-3xl">
-                  <div class="chip mb-4">${kicker}</div>
-                  <h1 class="text-3xl md:text-5xl font-black tracking-tight leading-[1.02] max-w-3xl">${title}</h1>
-                  <p class="mt-4 text-base md:text-lg text-blue-50/88 max-w-2xl leading-relaxed">${text}</p>
-                </div>
-                <div class="glass-panel !bg-white/10 !border-white/10 rounded-[1.35rem] p-4 min-w-[260px] max-w-sm text-left">
-                  <div class="text-[11px] uppercase tracking-[0.18em] text-blue-100/70 font-bold">Why this matters</div>
-                  <div class="mt-2 text-xl font-extrabold">Real-world oncology decisions need precision and workflow clarity.</div>
-                  <p class="mt-2 text-sm text-blue-50/75 leading-relaxed">This module translates evidence into practical, patient-facing decisions that feel real in clinic.</p>
-                </div>
-              </div>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">${statsHtml}</div>
-            </div>
+        <div class="nav-item flex items-center justify-between px-3 py-3 rounded-2xl cursor-pointer mb-2 border ${active ? 'bg-blue-50/75 border-blue-100 text-blue-900 font-bold shadow-md shadow-blue-100/50' : 'border-white/60 text-slate-600 hover:bg-white/70'} transition-all" onclick="loadSession(${idx})">
+          <div class="flex items-center gap-3 min-w-0">
+             <div class="nav-thumb w-12 h-12 shrink-0">
+               <img src="${s.patient.avatarSrc}" alt="${s.patient.name}" class="w-full h-full object-cover"/>
+             </div>
+             <div class="min-w-0">
+               <div class="flex items-center gap-2">
+                 <div class="w-5 h-5 rounded-full bg-white shadow-sm flex items-center justify-center text-[9px] font-black ${active ? 'text-blue-600' : 'text-slate-400'}">${idx+1}</div>
+                 <span class="text-sm truncate">${s.title}</span>
+               </div>
+               <div class="text-[11px] font-semibold ${active ? 'text-blue-700/80' : 'text-slate-400'} truncate">${s.patient.name} • ${s.patient.job}</div>
+             </div>
           </div>
-        </section>
-      `;
-    }
-
-    function renderSectionHeader(moduleId, title, copy, label = 'Section Overview') {
-      const module = appData.modules[moduleId];
-      const color = colorClasses(module.color);
-      return `
-        <div class="section-header-card ${color.banner}">
-          <div class="relative z-10 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-            <div class="max-w-3xl">
-              <div class="chip mb-2">${label}</div>
-              <h2 class="text-2xl md:text-3xl font-black tracking-tight">${title}</h2>
-              <p class="mt-3 text-white/84 text-base leading-relaxed max-w-2xl">${copy}</p>
-            </div>
-          </div>
+          <span class="material-symbols-outlined text-[18px] ${active && !done ? 'text-blue-400' : color}">${icon}</span>
         </div>
       `;
-    }
+    }).join('');
+    updateProgress();
+  }
 
-    function renderNavigationButtons(prev, next) {
-      return `
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
-          <div>${prev ? `<button onclick="navigateTo('${prev.moduleId}', '${prev.sectionId}')" class="inline-flex items-center gap-2 px-4 py-3 rounded-2xl border border-slate-200 bg-white text-slate-700 font-semibold hover:border-slate-300 hover:bg-slate-50 transition"><span class="material-symbols-outlined text-[18px]">arrow_back</span>${prev.label}</button>` : ''}</div>
-          <div>${next ? `<button onclick="navigateTo('${next.moduleId}', '${next.sectionId}')" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition shadow-lg shadow-slate-900/10">${next.label}<span class="material-symbols-outlined text-[18px]">arrow_forward</span></button>` : ''}</div>
+  function loadSession(idx) {
+    currentSessionIdx = idx;
+    const data = sessions[idx];
+    
+    if (window.innerWidth < 768) toggleSidebar();
+    
+    // Set Left Panel Data
+    dom.avatar.src = data.patient.avatarSrc;
+    dom.clinicalTitle.textContent = data.patient.clinicalTitle;
+    dom.clinicalDesc.textContent = data.patient.clinicalDesc;
+    dom.ptName.textContent = data.patient.name;
+    dom.ptDemo.textContent = `${data.patient.age}, ${data.patient.job}`;
+    dom.ptVibe.textContent = data.patient.vibe;
+    dom.ptComplaint.textContent = `"${data.patient.complaint}"`;
+    dom.ptDuration.textContent = data.patient.duration;
+    dom.ptRx.textContent = data.patient.rx;
+    dom.ptMindset.textContent = data.patient.mindset;
+
+    // Reset overlay
+    if(dom.clinicalOverlay.classList.contains('opacity-100')) toggleExamine();
+
+    switchTab('content');
+    renderSessionList();
+  }
+
+  // --- TABS RENDERING ---
+  function switchTab(tabName) {
+    activeTab = tabName;
+    dom.moduleTabs.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === activeTab));
+    
+    if (tabName === 'content') renderContentTab();
+    else if (tabName === 'consult') renderConsultTab();
+    else if (tabName === 'competence') renderCompetenceTab();
+    else if (tabName === 'resources') renderResourcesTab();
+  }
+
+  function renderContentTab() {
+    const data = sessions[currentSessionIdx].content;
+    dom.chatContainer.innerHTML = `
+      <div class="max-w-3xl mx-auto fade-in pb-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-[10px] font-black uppercase tracking-wider mb-4">Clinical Briefing</div>
+        <h2 class="text-3xl md:text-4xl font-black text-slate-900 tracking-tight leading-tight mb-6">${data.title}</h2>
+        <p class="text-lg text-slate-600 font-medium leading-relaxed mb-8">${data.summary}</p>
+        
+        <div class="grid sm:grid-cols-2 gap-5 mb-10">
+            ${data.stats.map(s => `
+                <div class="stat-card relative overflow-hidden group hover:border-blue-200 transition-colors">
+                    <span class="material-symbols-outlined text-[80px] absolute -right-4 -bottom-4 text-slate-50 group-hover:text-blue-50 transition-colors">${s.icon}</span>
+                    <div class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 relative z-10">${s.title}</div>
+                    <div class="text-4xl font-black text-blue-600 tracking-tighter mb-3 relative z-10">${s.val}</div>
+                    <p class="text-slate-600 text-sm font-medium relative z-10">${s.desc}</p>
+                </div>
+            `).join('')}
         </div>
-      `;
-    }
 
-    function getPrevNext(moduleId, sectionId) {
-      const all = getAllSections();
-      const index = getSectionIndex(moduleId, sectionId);
-      const prev = index > 0 ? all[index - 1] : null;
-      const next = index < all.length - 1 ? all[index + 1] : null;
-      return {
-        prev: prev ? { moduleId: prev.moduleId, sectionId: prev.id, label: prev.title } : null,
-        next: next ? { moduleId: next.moduleId, sectionId: next.id, label: next.title } : null
-      };
-    }
-
-    function getSectionContent(moduleId, sectionId) {
-        if (moduleId === 'gap-1') {
-            if (sectionId === 'intro') return `
-                ${renderHero(
-                    'gap-1',
-                    'HRR Testing and Diagnostic Workflow',
-                    'Close the HRR testing gap earlier in metastatic prostate cancer.',
-                    '',
-                    [
-                        { label: 'No testing', value: '40%', copy: 'About 40% of patients still do not receive genetic testing in practice.' },
-                        { label: 'Delay to testing', value: '16 Mo.', copy: 'Testing is often delayed well beyond the ideal treatment decision window.' },
-                        { label: 'At diagnosis', value: 'Test now', copy: 'Guidelines emphasize germline and somatic testing early in the metastatic workflow.' }
-                    ]
-                )}
-                <section class="section-shell">
-                    <div class="space-y-6 max-w-4xl mx-auto slide-up">
-                        ${renderSectionHeader('gap-1', 'What changed in the updated needs assessment', 'The updated document emphasizes metastatic prostate cancer overall, not just mCRPC, and makes HRR testing a core diagnostic workflow issue tied directly to treatment timing, patient counseling, and multidisciplinary care.', 'Assessment Update')}
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="stat-card">
-                                <div class="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-bold">Testing gap</div>
-                                <div class="text-3xl font-black text-slate-900 mt-2">40%</div>
-                                <p class="text-sm text-slate-600 mt-3 leading-relaxed">Many patients still do not receive germline or somatic testing despite clear actionability implications.</p>
-                            </div>
-                            <div class="stat-card">
-                                <div class="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-bold">Workflow lag</div>
-                                <div class="text-3xl font-black text-slate-900 mt-2">16 months</div>
-                                <p class="text-sm text-slate-600 mt-3 leading-relaxed">A long delay from diagnosis to first biomarker testing can leave patients on untargeted therapy too long.</p>
-                            </div>
-                            <div class="stat-card">
-                                <div class="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-bold">Clinical imperative</div>
-                                <div class="text-3xl font-black text-slate-900 mt-2">Act early</div>
-                                <p class="text-sm text-slate-600 mt-3 leading-relaxed">Testing should support risk stratification, treatment planning, and family risk discussions from the start.</p>
-                            </div>
-                        </div>
-
-                        <div class="feature-card">
-                            <h3 class="text-xl font-black text-slate-900 mb-3">Where the gap shows up</h3>
-                            <div class="space-y-3 text-slate-600 leading-relaxed">
-                                <p>Patients in community settings remain less likely to receive timely HRR testing, and disparities tied to age, race, and socioeconomic status continue to affect access.</p>
-                                <p>The updated assessment also pulls mCSPC into the discussion, noting that early testing matters because metastatic disease can evolve quickly and may require biomarker-directed treatment later in the pathway.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-end pt-2">
-                            <button onclick="navigateTo('gap-1', 'guidelines')" class="bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition flex items-center gap-2 shadow-md hover:-translate-y-0.5">
-                                View workflow actions <span class="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </section>`;
-
-            if (sectionId === 'guidelines') return `
-                <section class="section-shell slide-up">
-                    <div class="space-y-6 max-w-4xl mx-auto">
-                        ${renderSectionHeader('gap-1', 'Guideline and workflow priorities', 'The updated assessment highlights concordant guidance from NCCN, ASCO, and ESMO: clinicians need to recognize who should be tested, when testing should happen, what panels are needed, and how to act on the results.', 'Clinical Workflow')}
-
-                        <div class="feature-card">
-                            <h3 class="text-xl font-black text-slate-900 mb-4">Core testing principles</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="rounded-2xl border border-slate-200 bg-white p-5">
-                                    <div class="pill mb-3">Test at diagnosis</div>
-                                    <p class="text-sm text-slate-600 leading-relaxed">For metastatic prostate cancer, germline and somatic genomic testing should be built into the initial diagnostic workflow, not saved for the last line of therapy.</p>
-                                </div>
-                                <div class="rounded-2xl border border-slate-200 bg-white p-5">
-                                    <div class="pill mb-3">Use multigene panels</div>
-                                    <p class="text-sm text-slate-600 leading-relaxed">The updated assessment calls out BRCA1, BRCA2, ATM, PALB2, CHEK2, CDK12 and other HRR alterations, while reminding clinicians not to confuse prognostic markers with predictive biomarkers.</p>
-                                </div>
-                                <div class="rounded-2xl border border-slate-200 bg-white p-5">
-                                    <div class="pill mb-3">Counsel and educate</div>
-                                    <p class="text-sm text-slate-600 leading-relaxed">Genetic counseling and patient education are part of the testing workflow because results can affect therapy decisions and family risk assessment.</p>
-                                </div>
-                                <div class="rounded-2xl border border-slate-200 bg-white p-5">
-                                    <div class="pill mb-3">Retest when needed</div>
-                                    <p class="text-sm text-slate-600 leading-relaxed">If prior results were negative, incomplete, or clinically outdated, repeat evaluation at disease progression may reveal new actionable findings.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="feature-card">
-                                <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3"><span class="material-symbols-outlined">notification_important</span></div>
-                                <h4 class="font-bold text-slate-900 mb-2">Defined milestones</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">Trigger testing automatically at metastatic diagnosis and again when progression could change therapy selection.</p>
-                            </div>
-                            <div class="feature-card">
-                                <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3"><span class="material-symbols-outlined">bloodtype</span></div>
-                                <h4 class="font-bold text-slate-900 mb-2">Use practical access points</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">Liquid biopsy and remote genetics support can reduce friction when tissue, geography, or staffing become barriers.</p>
-                            </div>
-                            <div class="feature-card">
-                                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3"><span class="material-symbols-outlined">conversion_path</span></div>
-                                <h4 class="font-bold text-slate-900 mb-2">Translate results to action</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">The goal is not testing for its own sake. The goal is fast interpretation, patient counseling, and timely biomarker-based selection.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-between pt-4">
-                            <button onclick="navigateTo('gap-1', 'intro')" class="text-slate-500 hover:text-blue-600 font-medium flex items-center gap-2">
-                                <span class="material-symbols-outlined">arrow_back</span> Back
-                            </button>
-                            <button onclick="navigateTo('gap-1', 'case-marcus')" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2">
-                                Apply to case <span class="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </section>`;
-
-            if (sectionId === 'case-marcus') return `
-                <section class="section-shell slide-up">
-                    <div class="space-y-6 max-w-4xl mx-auto">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-2xl font-bold text-slate-900">Case Study: Marcus</h2>
-                            <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase tracking-wide">Interactive</span>
-                        </div>
-
-                        <div class="stat-card p-6">
-                            <div class="flex gap-4 mb-6">
-                                <div class="w-12 h-12 bg-slate-100 rounded-full flex-shrink-0 flex items-center justify-center text-xl text-slate-600 font-bold">M</div>
-                                <div>
-                                    <h3 class="font-bold text-lg text-slate-800">Patient profile</h3>
-                                    <p class="text-slate-600">Marcus is a 68-year-old man in a community practice setting with newly metastatic prostate cancer and no documented germline or somatic HRR testing.</p>
-                                </div>
-                            </div>
-
-                            ${renderClinicalVideoBlock('marcus', 'Marcus Consult', 'marcus.png', 'placeholder.mp4', "Clinical interaction: Marcus is anxious to begin treatment immediately and asks whether genomic testing can wait until later.", { posterMaxClass: 'max-h-[360px] mx-auto object-cover' })}
-
-                            <div class="space-y-3 bg-slate-50 p-5 rounded-lg border border-slate-100 text-sm">
-                                <p><strong class="text-slate-900">Clinical situation:</strong> He is symptomatic, anxious to start treatment, and asks whether testing can wait until later if therapy is started today.</p>
-                                <p><strong class="text-slate-900">Workflow concern:</strong> His team worries testing may slow care, even though results may directly affect present and future treatment selection.</p>
-                                <p><strong class="text-slate-900">Teaching point:</strong> The updated needs assessment treats testing as part of the treatment pathway, not as a separate optional referral.</p>
-                            </div>
-                        </div>
-
-                        ${renderQuizComponent(
-                            'quiz-marcus',
-                            'What is the best next step for Marcus?',
-                            [
-                                'Defer genomic testing until he becomes castration resistant so treatment can begin now.',
-                                'Order concurrent germline and somatic testing now while starting guideline-based care and planning for biomarker-directed decisions.',
-                                'Order somatic testing only because germline findings are not important for prostate cancer management.'
-                            ],
-                            1,
-                            'Correct. The updated assessment emphasizes that HRR testing belongs in the metastatic diagnostic workflow. Concurrent germline and somatic testing supports precision treatment planning, counseling, and later sequencing decisions.'
-                        )}
-
-                        <div class="flex justify-end pt-2">
-                            <button onclick="navigateTo('gap-2', 'intro')" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition flex items-center gap-2">
-                                Start module 2 <span class="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </section>`;
-        }
-
-        if (moduleId === 'gap-2') {
-            if (sectionId === 'intro') return `
-                ${renderHero(
-                    'gap-2',
-                    'PARPi Efficacy, Sequencing, and Shared Decisions',
-                    'Move from testing to confident PARPi selection and sequencing.',
-                    'The new needs assessment expands the educational scope beyond a single mCRPC decision point. Clinicians need current efficacy and safety data, clearer treatment sequencing logic, and stronger patient communication skills across both mCSPC and mCRPC.',
-                    [
-                        { label: 'HRRm-positive treated', value: '58.4%', copy: 'A major share of HRRm-positive patients still do not receive PARPi therapy.' },
-                        { label: 'Broader scope', value: 'mCSPC + mCRPC', copy: 'The update now includes earlier disease state evidence and evolving combination strategies.' },
-                        { label: 'Decision focus', value: 'Sequence well', copy: 'Biomarker status, prior therapy, and patient factors all matter.' }
-                    ]
-                )}
-                <section class="section-shell">
-                    <div class="space-y-6 max-w-4xl mx-auto slide-up">
-                        <div class="feature-card">
-                            <h3 class="text-xl font-black text-slate-900 mb-3">Why this gap matters now</h3>
-                            <p class="text-slate-600 leading-relaxed">The updated assessment emphasizes that clinicians remain unsure about when to use PARPi combinations, which patients are the strongest candidates, and how to discuss benefits, tradeoffs, and trial participation with patients. That uncertainty delays biomarker-directed care even after actionable testing is available.</p>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="stat-card">
-                                <div class="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-bold">Therapy gap</div>
-                                <div class="text-3xl font-black text-slate-900 mt-2">Underused</div>
-                                <p class="text-sm text-slate-600 mt-3 leading-relaxed">Even among patients with actionable HRR alterations, PARPi-based treatment is still not used consistently.</p>
-                            </div>
-                            <div class="stat-card">
-                                <div class="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-bold">Communication need</div>
-                                <div class="text-3xl font-black text-slate-900 mt-2">Shared decisions</div>
-                                <p class="text-sm text-slate-600 mt-3 leading-relaxed">The new assessment adds explicit emphasis on patient education, decision quality, and clinical trial discussions.</p>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-end pt-2">
-                            <button onclick="navigateTo('gap-2', 'pathways')" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition flex items-center gap-2">
-                                View treatment landscape <span class="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </section>`;
-
-            if (sectionId === 'pathways') return `
-                <section class="section-shell slide-up">
-                    <div class="space-y-6 max-w-4xl mx-auto">
-                        ${renderSectionHeader('gap-2', 'Updated treatment landscape', 'The revised needs assessment now clearly spans metastatic castration-sensitive and metastatic castration-resistant prostate cancer. It also sharpens the teaching around mutation-specific benefit, trial interpretation, and sequencing decisions.', 'Evidence Update')}
-
-                        <div class="space-y-4">
-                            <div class="feature-card">
-                                <div class="flex flex-col md:flex-row md:items-start gap-4">
-                                    <div class="min-w-[130px] rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
-                                        <div class="text-xs uppercase tracking-[0.18em] text-slate-500 font-bold">mCSPC</div>
-                                        <div class="text-lg font-black text-slate-900 mt-1">AMPLITUDE</div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="font-black text-slate-900 text-lg">Niraparib + abiraterone</h3>
-                                        <p class="text-sm text-slate-600 mt-2 leading-relaxed">The update adds the 2025 approval context for BRCA2-mutated mCSPC and highlights radiographic progression-free survival benefit when PARPi therapy is brought earlier into the metastatic course.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="feature-card">
-                                <div class="flex flex-col md:flex-row md:items-start gap-4">
-                                    <div class="min-w-[130px] rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
-                                        <div class="text-xs uppercase tracking-[0.18em] text-slate-500 font-bold">mCSPC</div>
-                                        <div class="text-lg font-black text-slate-900 mt-1">TALAPRO-3</div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="font-black text-slate-900 text-lg">Talazoparib + enzalutamide</h3>
-                                        <p class="text-sm text-slate-600 mt-2 leading-relaxed">Recently published data showed significant radiographic progression-free survival improvement in HRR-altered mCSPC, while overall survival remains immature.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="feature-card border-purple-200 bg-purple-50/60">
-                                <div class="flex flex-col md:flex-row md:items-start gap-4">
-                                    <div class="min-w-[130px] rounded-2xl border border-purple-200 bg-white p-4 text-center">
-                                        <div class="text-xs uppercase tracking-[0.18em] text-purple-500 font-bold">mCRPC</div>
-                                        <div class="text-lg font-black text-purple-900 mt-1">TALAPRO-2</div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="font-black text-purple-900 text-lg">Talazoparib + enzalutamide</h3>
-                                        <p class="text-sm text-purple-900/80 mt-2 leading-relaxed">This remains the standout regimen for broad HRR-mutated disease because the updated assessment notes it is the only regimen with a Category 1 NCCN recommendation for both BRCA and non-BRCA HRRm mCRPC populations.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="feature-card">
-                                <div class="flex flex-col md:flex-row md:items-start gap-4">
-                                    <div class="min-w-[130px] rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
-                                        <div class="text-xs uppercase tracking-[0.18em] text-slate-500 font-bold">mCRPC</div>
-                                        <div class="text-lg font-black text-slate-900 mt-1">MAGNITUDE</div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="font-black text-slate-900 text-lg">Niraparib + abiraterone</h3>
-                                        <p class="text-sm text-slate-600 mt-2 leading-relaxed">The benefit signal is strongest in BRCA-mutated disease, while the updated assessment notes no radiographic progression-free survival improvement in the non-BRCA HRR subgroup.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="feature-card">
-                                <div class="flex flex-col md:flex-row md:items-start gap-4">
-                                    <div class="min-w-[130px] rounded-2xl border border-slate-200 bg-slate-50 p-4 text-center">
-                                        <div class="text-xs uppercase tracking-[0.18em] text-slate-500 font-bold">mCRPC</div>
-                                        <div class="text-lg font-black text-slate-900 mt-1">PROpel</div>
-                                    </div>
-                                    <div class="flex-1">
-                                        <h3 class="font-black text-slate-900 text-lg">Olaparib + abiraterone</h3>
-                                        <p class="text-sm text-slate-600 mt-2 leading-relaxed">The updated content emphasizes the stronger signal in the BRCA-mutated subgroup and reminds learners that overall survival benefit was not statistically significant in the full intention-to-treat population.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="feature-card">
-                            <h3 class="text-xl font-black text-slate-900 mb-3">Sequencing principles in the new assessment</h3>
-                            <ul class="space-y-3 text-sm text-slate-600 leading-relaxed">
-                                <li>Use biomarker status, prior therapy, disease state, and patient factors together instead of relying on a single rule.</li>
-                                <li>Recognize that BRCA and non-BRCA HRR alterations do not behave identically.</li>
-                                <li>Re-testing may be appropriate when earlier results were negative, incomplete, or no longer clinically informative.</li>
-                                <li>Patient education and shared decision-making are part of therapy selection, especially when QoL tradeoffs or trial participation are on the table.</li>
-                            </ul>
-                        </div>
-
-                        <div class="flex justify-between pt-4">
-                            <button onclick="navigateTo('gap-2', 'intro')" class="text-slate-500 hover:text-purple-600 font-medium flex items-center gap-2">
-                                <span class="material-symbols-outlined">arrow_back</span> Back
-                            </button>
-                            <button onclick="navigateTo('gap-2', 'case-arthur')" class="bg-purple-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-purple-700 transition flex items-center gap-2">
-                                Apply to case <span class="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </section>`;
-
-            if (sectionId === 'case-arthur') return `
-                <section class="section-shell slide-up">
-                    <div class="space-y-6 max-w-4xl mx-auto">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-2xl font-bold text-slate-900">Case Study: Arthur</h2>
-                            <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-bold uppercase tracking-wide">Interactive</span>
-                        </div>
-
-                        <div class="stat-card p-6">
-                            <div class="flex gap-4 mb-6">
-                                <div class="w-12 h-12 bg-slate-100 rounded-full flex-shrink-0 flex items-center justify-center text-xl text-slate-600 font-bold">A</div>
-                                <div>
-                                    <h3 class="font-bold text-lg text-slate-800">Patient profile</h3>
-                                    <p class="text-slate-600">Arthur is a 72-year-old man with HRR-mutated mCRPC progressing after prior androgen receptor pathway inhibitor exposure.</p>
-                                </div>
-                            </div>
-
-                            ${renderClinicalVideoBlock('arthur', 'Arthur Consult', 'arthur.png', 'placeholder.mp4', "Clinical interaction: Arthur has reviewed his mutation report and wants to understand whether a non-BRCA HRR alteration still supports PARPi treatment.", { posterMaxClass: 'max-h-[360px] mx-auto object-cover' })}
-
-                            <div class="space-y-3 bg-slate-50 p-5 rounded-lg border border-slate-100 text-sm">
-                                <p><strong class="text-slate-900">Genomic profile:</strong> ATM mutation detected. No BRCA1 or BRCA2 alteration is identified.</p>
-                                <p><strong class="text-slate-900">Patient concern:</strong> He asks whether PARPi-based therapy is still worth discussing if his mutation is not BRCA, and wants to understand the likely benefit versus toxicity burden.</p>
-                                <p><strong class="text-slate-900">Teaching point:</strong> The updated assessment specifically addresses the need to interpret mutation subtype and bring patients into the decision rather than making a one-size-fits-all recommendation.</p>
-                            </div>
-                        </div>
-
-                        ${renderQuizComponent(
-                            'quiz-arthur',
-                            "Which regimen is most clearly positioned in the updated content for a broader non-BRCA HRR-mutated profile like Arthur's?",
-                            [
-                                'Olaparib + abiraterone',
-                                'Talazoparib + enzalutamide',
-                                'Niraparib + abiraterone'
-                            ],
-                            1,
-                            'Correct. The updated needs assessment highlights talazoparib plus enzalutamide as the only regimen with a Category 1 NCCN recommendation spanning both BRCA and non-BRCA HRR-mutated mCRPC populations.'
-                        )}
-
-                        <div class="flex justify-end pt-2">
-                            <button onclick="navigateTo('gap-3', 'intro')" class="bg-rose-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-rose-700 transition flex items-center gap-2">
-                                Start module 3 <span class="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </section>`;
-        }
-
-        if (moduleId === 'gap-3') {
-            if (sectionId === 'intro') return `
-                ${renderHero(
-                    'gap-3',
-                    'AE Management Through the MDT',
-                    'Manage PARPi adverse events proactively and keep patients on therapy safely.',
-                    'The new needs assessment strengthens the AE section with more explicit hematologic, cardiovascular, gastrointestinal, and quality-of-life teaching points. It also makes multidisciplinary care and patient education central to toxicity mitigation.',
-                    [
-                        { label: 'Most common risk', value: 'Anemia', copy: 'Hematologic toxicity remains the most common and most clinically disruptive AE class.' },
-                        { label: 'Management style', value: 'Modify dose', copy: 'Dose interruption and reduction often preserve benefit better than stopping therapy too early.' },
-                        { label: 'Team model', value: 'MDT', copy: 'Pharmacy, nursing, urology, oncology, cardiology, pathology, and genetics all have defined roles.' }
-                    ]
-                )}
-                <section class="section-shell">
-                    <div class="space-y-6 max-w-4xl mx-auto slide-up">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="feature-card">
-                                <h3 class="font-black text-slate-900 text-lg mb-2">Hematologic toxicities</h3>
-                                <p class="text-sm text-slate-600 leading-relaxed">Anemia, thrombocytopenia, and neutropenia require regular CBC monitoring, clear dose-modification thresholds, and early supportive care planning.</p>
-                            </div>
-                            <div class="feature-card">
-                                <h3 class="font-black text-slate-900 text-lg mb-2">Beyond the CBC</h3>
-                                <p class="text-sm text-slate-600 leading-relaxed">The updated assessment adds cardiovascular risk, fatigue, GI symptoms, MDS or AML counseling, and patient-reported side effect recognition to the monitoring plan.</p>
-                            </div>
-                        </div>
-
-                        <div class="feature-card">
-                            <h3 class="text-xl font-black text-slate-900 mb-3">Updated management principle</h3>
-                            <p class="text-slate-600 leading-relaxed">Successful PARPi use depends on anticipating adverse events, educating patients about what to report early, and using protocol-driven dose interruption, dose reduction, supportive care, and care coordination before toxicity forces avoidable discontinuation.</p>
-                        </div>
-
-                        <div class="flex justify-end pt-2">
-                            <button onclick="navigateTo('gap-3', 'mdt')" class="bg-rose-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-rose-700 transition flex items-center gap-2">
-                                View MDT roles <span class="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </section>`;
-
-            if (sectionId === 'mdt') return `
-                <section class="section-shell slide-up">
-                    <div class="space-y-6 max-w-4xl mx-auto">
-                        ${renderSectionHeader('gap-3', 'Multidisciplinary care in the updated assessment', 'The revised document is explicit that PARPi management is not owned by one clinician. Testing, therapy selection, toxicity management, and patient counseling all depend on coordinated multidisciplinary roles.', 'Team-Based Care')}
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div class="feature-card">
-                                <div class="flex items-start gap-4">
-                                    <div class="w-12 h-12 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center shrink-0"><span class="material-symbols-outlined">medication</span></div>
-                                    <div>
-                                        <h3 class="font-bold text-slate-900">Oncology pharmacy</h3>
-                                        <p class="text-sm text-slate-600 mt-1">Medication reconciliation, drug interaction review, antiemetic and supportive care planning, and adherence counseling at treatment start.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="feature-card">
-                                <div class="flex items-start gap-4">
-                                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center shrink-0"><span class="material-symbols-outlined">clinical_notes</span></div>
-                                    <div>
-                                        <h3 class="font-bold text-slate-900">Nurses and APPs</h3>
-                                        <p class="text-sm text-slate-600 mt-1">Ongoing symptom checks, CBC monitoring workflows, education reinforcement, and rapid escalation when fatigue, dyspnea, bleeding, or GI toxicity appears.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="feature-card">
-                                <div class="flex items-start gap-4">
-                                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center shrink-0"><span class="material-symbols-outlined">genetics</span></div>
-                                    <div>
-                                        <h3 class="font-bold text-slate-900">Genetics and pathology</h3>
-                                        <p class="text-sm text-slate-600 mt-1">Help interpret germline and somatic findings, clarify actionability, and support counseling when inherited risk is identified.</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="feature-card">
-                                <div class="flex items-start gap-4">
-                                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center shrink-0"><span class="material-symbols-outlined">monitor_heart</span></div>
-                                    <div>
-                                        <h3 class="font-bold text-slate-900">Cardiology and supportive specialties</h3>
-                                        <p class="text-sm text-slate-600 mt-1">Baseline cardiovascular assessment and co-management matter when treatment combinations increase blood pressure or other cardiac risks.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="feature-card">
-                            <h3 class="text-xl font-black text-slate-900 mb-3">Patient education is part of toxicity control</h3>
-                            <p class="text-slate-600 leading-relaxed">The updated needs assessment directly links education to adherence and safer treatment. Patients need plain-language guidance on expected side effects, when to call, how dose changes work, and why early reporting can prevent treatment loss.</p>
-                        </div>
-
-                        <div class="flex justify-between pt-4">
-                            <button onclick="navigateTo('gap-3', 'intro')" class="text-slate-500 hover:text-rose-600 font-medium flex items-center gap-2">
-                                <span class="material-symbols-outlined">arrow_back</span> Back
-                            </button>
-                            <button onclick="navigateTo('gap-3', 'case-james')" class="bg-rose-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-rose-700 transition flex items-center gap-2">
-                                Apply to case <span class="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </section>`;
-
-            if (sectionId === 'case-james') return `
-                <section class="section-shell slide-up">
-                    <div class="space-y-6 max-w-4xl mx-auto">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-2xl font-bold text-slate-900">Case Study: James</h2>
-                            <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-bold uppercase tracking-wide">Interactive</span>
-                        </div>
-
-                        <div class="stat-card p-6">
-                            <div class="flex gap-4 mb-6">
-                                <div class="w-12 h-12 bg-slate-100 rounded-full flex-shrink-0 flex items-center justify-center text-xl text-slate-600 font-bold">J</div>
-                                <div>
-                                    <h3 class="font-bold text-lg text-slate-800">Patient profile</h3>
-                                    <p class="text-slate-600">James is a 65-year-old man receiving talazoparib plus enzalutamide for HRR-mutated mCRPC.</p>
-                                </div>
-                            </div>
-
-                            ${renderClinicalVideoBlock('james', 'James Consult', 'james.png', 'placeholder.mp4', "Clinical interaction: James reports severe fatigue after treatment, and his latest labs show grade 3 anemia that needs immediate management.", { posterMaxClass: 'max-h-[360px] mx-auto object-cover' })}
-
-                            <div class="space-y-3 bg-slate-50 p-5 rounded-lg border border-slate-100 text-sm">
-                                <div class="bg-rose-50 border border-rose-200 p-3 rounded text-rose-900 font-bold">Lab alert: Hemoglobin 7.8 g/dL with severe fatigue</div>
-                                <p><strong class="text-slate-900">Patient concern:</strong> He says the treatment feels intolerable and assumes stopping permanently is the only safe option.</p>
-                                <p><strong class="text-slate-900">Team task:</strong> The nurse, pharmacist, and oncology clinician need to explain next steps, supportive care, and how dose modification can preserve benefit.</p>
-                            </div>
-                        </div>
-
-                        ${renderQuizComponent(
-                            'quiz-james',
-                            'What is the most guideline-concordant approach for James right now?',
-                            [
-                                'Stop the PARPi permanently because any grade 3 anemia means treatment failure.',
-                                'Use dose interruption, supportive care, and dose reduction if appropriate while continuing close monitoring and patient education.',
-                                'Continue the same dose and ask James to wait for spontaneous recovery.'
-                            ],
-                            1,
-                            'Correct. The updated assessment emphasizes proactive toxicity mitigation through monitoring, supportive care, and protocol-driven dose modification rather than automatic permanent discontinuation.'
-                        )}
-
-                        <div class="flex justify-end pt-2">
-                            <button onclick="navigateTo('resources', 'summary')" class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700 transition flex items-center gap-2">
-                                View summary <span class="material-symbols-outlined">arrow_forward</span>
-                            </button>
-                        </div>
-                    </div>
-                </section>`;
-        }
-
-        if (moduleId === 'resources' && sectionId === 'summary') return `
-            <section class="section-shell slide-up">
-                <div class="space-y-6 max-w-4xl mx-auto">
-                    ${renderSectionHeader('resources', 'Clinical takeaways from the updated Pfizer needs assessment', 'This version of the module now reflects broader metastatic prostate cancer education, newer efficacy data, and a stronger focus on workflow, patient communication, and multidisciplinary execution.', 'Module Summary')}
-
-                    <div class="space-y-4">
-                        <div class="feature-card flex items-start gap-4">
-                            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined">biotech</span>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-900 text-lg">Test early and interpret with intent</h3>
-                                <p class="text-slate-600 mt-1">Concurrent germline and somatic testing should support treatment selection, risk assessment, counseling, and re-evaluation as disease evolves.</p>
-                            </div>
-                        </div>
-
-                        <div class="feature-card flex items-start gap-4">
-                            <div class="w-10 h-10 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined">timeline</span>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-900 text-lg">Use the evidence by disease state and mutation subtype</h3>
-                                <p class="text-slate-600 mt-1">The update now includes mCSPC evidence and reinforces that BRCA and non-BRCA HRR alterations do not carry identical PARPi benefit profiles.</p>
-                            </div>
-                        </div>
-
-                        <div class="feature-card flex items-start gap-4">
-                            <div class="w-10 h-10 bg-rose-100 text-rose-600 rounded-full flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined">health_and_safety</span>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-900 text-lg">Anticipate adverse events and manage them early</h3>
-                                <p class="text-slate-600 mt-1">CBC-based monitoring, supportive care, cardiovascular awareness, and dose-modification pathways help keep patients on effective therapy safely.</p>
-                            </div>
-                        </div>
-
-                        <div class="feature-card flex items-start gap-4">
-                            <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0">
-                                <span class="material-symbols-outlined">groups</span>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-900 text-lg">Teach the patient and use the multidisciplinary team</h3>
-                                <p class="text-slate-600 mt-1">Shared decision-making, education about expected adverse events, and coordinated multidisciplinary roles are now core learning goals in the updated module.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-6 mt-8 text-center">
-                        <span class="material-symbols-outlined text-indigo-500 text-4xl mb-2">task_alt</span>
-                        <h3 class="font-bold text-indigo-900 text-xl">Module Complete</h3>
-                        <p class="text-indigo-700 mt-2">You have completed the updated metastatic prostate cancer PARPi learning pathway.</p>
-                    </div>
+        <div class="glass-panel-dark text-white rounded-[1.75rem] p-6 md:p-8">
+            <div class="text-[10px] font-black uppercase tracking-widest text-blue-300 mb-4">Key Clinical Pearls</div>
+            <div class="space-y-4">
+              ${data.pearls.map((item, idx) => `
+                <div class="flex gap-4 items-start">
+                  <div class="w-8 h-8 rounded-full bg-white/10 text-white shrink-0 flex items-center justify-center font-black text-sm">${idx + 1}</div>
+                  <p class="text-sm leading-relaxed font-medium pt-1.5">${item}</p>
                 </div>
-            </section>`;
-
-        return '';
-    }
-
-    function renderQuizComponent(id, question, options, correctIndex, explanation) {
-        const state = quizStates[id] || { submitted: false, selected: null };
-        const isCorrect = state.selected === correctIndex;
-
-        const optionsHtml = options.map((opt, idx) => {
-            let style = 'bg-white border-slate-200 hover:border-blue-300';
-            let icon = '<div class="w-5 h-5 rounded-full border border-slate-300"></div>';
-
-            if (!state.submitted && state.selected === idx) {
-                style = 'bg-blue-50 border-blue-500 ring-2 ring-blue-200';
-                icon = '<div class="w-5 h-5 rounded-full border border-blue-500 bg-white flex items-center justify-center"><div class="w-2.5 h-2.5 rounded-full bg-blue-500"></div></div>';
-            } else if (state.submitted) {
-                if (idx === correctIndex) {
-                    style = 'bg-emerald-50 border-emerald-300 ring-2 ring-emerald-200';
-                    icon = '<div class="w-5 h-5 rounded-full bg-emerald-500 border-emerald-500 flex items-center justify-center"><span class="material-symbols-outlined text-white text-sm">check</span></div>';
-                } else if (idx === state.selected) {
-                    style = 'bg-red-50 border-red-300 ring-2 ring-red-200';
-                    icon = '<div class="w-5 h-5 rounded-full border-red-500 flex items-center justify-center"><span class="material-symbols-outlined text-red-500 text-sm">close</span></div>';
-                } else {
-                    style = 'bg-slate-50 border-slate-200 opacity-60';
-                }
-            }
-
-            const clickAttr = !state.submitted ? `onclick="selectQuizOption('${id}', ${idx})"` : '';
-            return `<button ${clickAttr} class="quiz-option text-left w-full p-4 rounded-2xl border transition-all duration-200 flex items-start gap-3 mb-3 ${style}">
-                ${icon}
-                <span class="text-sm leading-relaxed ${state.submitted && idx === correctIndex ? 'font-bold text-emerald-900' : 'text-slate-700'}">${opt}</span>
-            </button>`;
-        }).join('');
-
-        const feedback = state.submitted
-            ? `<div class="mt-5 p-5 rounded-2xl border ${isCorrect ? 'bg-emerald-50 border-emerald-200 text-emerald-900' : 'bg-red-50 border-red-200 text-red-900'} fade-in">
-                <div class="flex items-center gap-2 font-bold mb-2">
-                    <span class="material-symbols-outlined">${isCorrect ? 'check_circle' : 'cancel'}</span>
-                    ${isCorrect ? 'Correct' : 'Incorrect'}
-                </div>
-                <p class="text-sm leading-relaxed">${explanation}</p>
-            </div>`
-            : `<button onclick="submitQuiz('${id}', ${correctIndex})" class="mt-4 w-full py-3.5 rounded-2xl font-bold transition-all ${state.selected !== null ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/20' : 'bg-slate-200 text-slate-400 cursor-not-allowed'}" ${state.selected === null ? 'disabled' : ''}>Submit Answer</button>`;
-
-        return `<div class="medical-card p-0 overflow-hidden my-6" id="${id}">
-            <div class="medical-card-header flex items-center justify-between gap-4">
-                <div>
-                    <div class="pill">Knowledge Check</div>
-                    <h3 class="font-bold text-slate-900 mt-3 text-lg leading-snug">${question}</h3>
-                </div>
+              `).join('')}
             </div>
-            <div class="p-5 md:p-6">
-                ${optionsHtml}
-                ${feedback}
-            </div>
-        </div>`;
-    }
+        </div>
+      </div>
+    `;
+    dom.interactionArea.innerHTML = `<button class="w-full py-4 bg-blue-600 text-white font-bold rounded-xl shadow-md hover:bg-blue-700 transition-all flex items-center justify-center gap-2" onclick="switchTab('consult')">Initiate Patient Consult <span class="material-symbols-outlined">arrow_forward</span></button>`;
+  }
 
-    function renderClinicalVideoBlock(key, name, posterSrc, videoSrc, observationText, opts = {}) {
-      const posterMaxClass = opts.posterMaxClass || 'h-[340px] md:h-[380px] object-cover';
-      const label = opts.label || 'Clinical Observation';
-      return `
-        <div class="clinical-shell my-6" data-clinical-video-block="1" data-cv-key="${key}">
-          <button type="button" class="w-full relative block group fade-swap swap-visible" data-cv-poster aria-label="Play ${name} clinical observation video">
-            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-cyan-300/10 z-10"></div>
-            <img src="${posterSrc}" alt="${name}" class="w-full ${posterMaxClass} opacity-75 group-hover:opacity-95 transition duration-500" />
-            <div class="absolute inset-0 dot-grid opacity-20"></div>
-            <div class="absolute inset-0 flex items-center justify-center z-20">
-              <div class="h-20 w-20 rounded-full bg-blue-500/85 backdrop-blur border border-blue-300/40 shadow-2xl flex items-center justify-center group-hover:scale-110 transition duration-300">
-                <span class="material-symbols-outlined text-white text-4xl">play_arrow</span>
-              </div>
-            </div>
-            <div class="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-slate-950/95 via-slate-950/50 to-transparent z-20 text-left">
-              <div class="text-white font-semibold text-xl">${label}</div>
-              <div class="text-blue-200 text-sm mt-1">Tap to open the clinical video</div>
-            </div>
-          </button>
-
-          <div class="hidden relative fade-swap swap-hidden bg-slate-950" data-cv-wrap>
-            <div class="p-3 md:p-4">
-              <video class="w-full rounded-2xl bg-black max-h-[420px]" controls playsinline preload="metadata" poster="${posterSrc}" data-cv-video>
-                <source src="${videoSrc}" type="video/mp4" />
-                Your browser does not support HTML5 video.
-              </video>
-            </div>
-            <div class="px-4 md:px-5 pb-5">
-              <div class="rounded-2xl border border-blue-300/12 bg-white/5 p-4 text-left">
-                <div class="pill !bg-blue-500/15 !text-blue-100 !border-blue-300/20 mb-3">Patient Report</div>
-                <h3 class="font-semibold text-xl text-white mb-2">${name}</h3>
-                <p class="text-slate-200 leading-relaxed">${observationText}</p>
-                <div class="text-xs text-blue-200/70 mt-3">Video source: ${videoSrc}</div>
-              </div>
-            </div>
-            <button type="button" class="absolute top-4 right-4 bg-white/10 hover:bg-white/20 text-white rounded-full p-2.5 backdrop-blur transition" data-cv-replay aria-label="Close video">
-              <span class="material-symbols-outlined text-sm">close</span>
-            </button>
+  function renderConsultTab() {
+    const data = sessions[currentSessionIdx];
+    dom.chatContainer.innerHTML = `
+      <div class="max-w-2xl mx-auto fade-in mt-4">
+        <div class="flex gap-4">
+<div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl rounded-tl-none shadow-sm text-slate-700">
+            <p class="text-[10px] font-black uppercase tracking-widest text-blue-600 mb-2">Scenario Setup</p>
+            <p class="font-medium leading-relaxed">${data.scenario.intro}</p>
           </div>
         </div>
-      `;
-    }
+      </div>
+    `;
+    dom.interactionArea.innerHTML = `<button class="w-full py-4 bg-navy text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-all flex items-center justify-center gap-2" onclick="startConsult()">Enter Exam Room <span class="material-symbols-outlined">login</span></button>`;
+  }
 
-    function initClinicalVideos() {
-        const blocks = document.querySelectorAll('[data-clinical-video-block="1"]');
-        if (!blocks.length) return;
+  function startConsult() {
+    goToStep('start');
+  }
 
-        blocks.forEach(block => {
-            const posterBtn = block.querySelector('[data-cv-poster]');
-            const wrap = block.querySelector('[data-cv-wrap]');
-            const replay = block.querySelector('[data-cv-replay]');
-            const video = block.querySelector('[data-cv-video]');
+  function goToStep(stepId) {
+    const data = sessions[currentSessionIdx];
+    const step = data.scenario.steps.find(s => s.id === stepId);
+    
+    // Add typing indicator
+    const tid = `type-${Date.now()}`;
+    dom.chatContainer.insertAdjacentHTML('beforeend', `
+      <div id="${tid}" class="flex gap-4 max-w-2xl mx-auto fade-in mt-4">
+        <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-slate-500">person</span></div>
+        <div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-slate-200 w-20 flex items-center justify-center gap-1 typing-indicator">
+          <span class="w-2 h-2 bg-slate-400 rounded-full block"></span><span class="w-2 h-2 bg-slate-400 rounded-full block"></span><span class="w-2 h-2 bg-slate-400 rounded-full block"></span>
+        </div>
+      </div>
+    `);
+    dom.chatContainer.scrollTop = dom.chatContainer.scrollHeight;
 
-            if (!posterBtn || !wrap) return;
+    setTimeout(() => {
+      document.getElementById(tid).remove();
+      
+      // Add Bot Message
+      dom.chatContainer.insertAdjacentHTML('beforeend', `
+        <div class="flex gap-4 max-w-2xl mx-auto fade-in mt-4">
+          <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-slate-500">person</span>
+          </div>
+          <div class="bg-white text-slate-700 rounded-2xl rounded-tl-none border border-slate-200 shadow-sm p-4 max-w-[85%] font-medium text-sm leading-relaxed">
+            <p>${step.bot}</p>
+          </div>
+        </div>
+      `);
+      dom.chatContainer.scrollTop = dom.chatContainer.scrollHeight;
 
-            const showSim = () => {
-                posterBtn.classList.add('swap-hidden');
-                posterBtn.classList.remove('swap-visible');
-                posterBtn.disabled = true;
-
-                wrap.classList.remove('hidden');
-                requestAnimationFrame(() => {
-                    wrap.classList.remove('swap-hidden');
-                    wrap.classList.add('swap-visible');
-                });
-
-                if (video) {
-                    try {
-                        video.currentTime = 0;
-                        const playPromise = video.play();
-                        if (playPromise && typeof playPromise.catch === 'function') {
-                            playPromise.catch(() => {});
-                        }
-                    } catch (e) {}
-                }
-            };
-
-            const resetSim = () => {
-                if (video) {
-                    try {
-                        video.pause();
-                        video.currentTime = 0;
-                    } catch (e) {}
-                }
-
-                wrap.classList.add('swap-hidden');
-                wrap.classList.remove('swap-visible');
-                setTimeout(() => {
-                    wrap.classList.add('hidden');
-                    posterBtn.classList.remove('swap-hidden');
-                    posterBtn.classList.add('swap-visible');
-                    posterBtn.disabled = false;
-                }, 260);
-            };
-
-            posterBtn.addEventListener('click', showSim);
-            if (replay) replay.addEventListener('click', resetSim);
+      if (step.isEnd) {
+        showEndState(step);
+      } else {
+        // Show Options
+        let optsHtml = `<div class="max-w-2xl mx-auto flex flex-col gap-2 mt-4 fade-in">`;
+        step.options.forEach((opt, idx) => {
+            optsHtml += `<button class="text-left p-4 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:border-blue-400 hover:bg-blue-50 transition-colors shadow-sm" onclick="handleChatChoice('${opt.text.replace(/'/g, "\\'")}', '${opt.next}')">${opt.text}</button>`;
         });
+        optsHtml += `</div>`;
+        dom.interactionArea.innerHTML = optsHtml;
+      }
+    }, 800);
+  }
+
+  window.handleChatChoice = function(text, nextStepId) {
+    dom.interactionArea.innerHTML = '';
+    // Add User Message
+    dom.chatContainer.insertAdjacentHTML('beforeend', `
+      <div class="flex gap-4 max-w-2xl mx-auto fade-in flex-row-reverse mt-4">
+<div class="bg-navy text-white rounded-2xl rounded-tr-none shadow-md p-4 max-w-[85%] text-sm font-medium leading-relaxed">
+          <p>${text}</p>
+        </div>
+      </div>
+    `);
+    dom.chatContainer.scrollTop = dom.chatContainer.scrollHeight;
+    goToStep(nextStepId);
+  }
+
+  function showEndState(step) {
+    const isSuccess = step.success;
+    dom.interactionArea.innerHTML = `
+      <div class="p-6 rounded-2xl ${isSuccess ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'} fade-in shadow-sm max-w-2xl mx-auto w-full">
+        <div class="flex items-start gap-4">
+          <span class="material-symbols-outlined ${isSuccess ? 'text-green-500' : 'text-red-500'} text-4xl mt-1">${isSuccess ? 'check_circle' : 'cancel'}</span>
+          <div class="flex-1">
+            <h3 class="font-black tracking-tight ${isSuccess ? 'text-green-900' : 'text-red-900'} text-xl mb-1">${isSuccess ? 'Clinical Goal Reached' : 'Suboptimal Approach'}</h3>
+            <p class="text-sm font-medium ${isSuccess ? 'text-green-800' : 'text-red-800'} mb-6 leading-relaxed">${step.feedback}</p>
+            ${isSuccess ? `<button class="w-full py-3 bg-green-600 text-white rounded-xl font-bold uppercase tracking-wider hover:bg-green-700 shadow-md transition-all text-xs" onclick="completeConsult('${step.takeaway.replace(/'/g, "\\'")}')">Proceed to Assessment</button>` 
+                        : `<button class="w-full py-3 bg-slate-900 text-white rounded-xl font-bold uppercase tracking-wider hover:bg-slate-800 shadow-md transition-all text-xs" onclick="loadSession(${currentSessionIdx})">Restart Consult</button>`}
+          </div>
+        </div>
+      </div>
+    `;
+    dom.chatContainer.scrollTop = dom.chatContainer.scrollHeight;
+  }
+
+  window.completeConsult = function(takeaway) {
+    if (!consultedSessions.includes(currentSessionIdx)) consultedSessions.push(currentSessionIdx);
+    document.getElementById('modal-takeaway').textContent = takeaway;
+    document.getElementById('completion-modal').classList.remove('hidden');
+    setTimeout(() => {
+      document.getElementById('modal-content').classList.remove('scale-95', 'opacity-0');
+      document.getElementById('modal-content').classList.add('scale-100', 'opacity-100');
+    }, 10);
+  }
+
+  window.closeModalAndAssess = function() {
+    document.getElementById('modal-content').classList.remove('scale-100', 'opacity-100');
+    document.getElementById('modal-content').classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      document.getElementById('completion-modal').classList.add('hidden');
+      switchTab('competence');
+    }, 250);
+  }
+
+  function renderCompetenceTab() {
+    const data = sessions[currentSessionIdx].quiz;
+    const isConsulted = consultedSessions.includes(currentSessionIdx);
+    const isPassed = quizPassedSessions.includes(currentSessionIdx);
+
+    if (!isConsulted && !isPassed) {
+      dom.chatContainer.innerHTML = `<div class="max-w-2xl mx-auto fade-in mt-12"><div class="p-10 text-center bg-slate-50 rounded-3xl border border-slate-200"><span class="material-symbols-outlined text-5xl text-slate-300 mb-4">lock</span><h3 class="text-2xl font-black text-slate-900 tracking-tight">Assessment Locked</h3><p class="text-slate-500 font-medium mt-2">Please complete the patient consultation to unlock this knowledge check.</p></div></div>`;
+      dom.interactionArea.innerHTML = `<button class="w-full py-4 bg-blue-600 text-white font-bold rounded-xl shadow-md hover:bg-blue-700 transition-all" onclick="switchTab('consult')">Go to Consult</button>`;
+      return;
     }
 
-    function renderSidebar() {
-        const container = document.getElementById('nav-container');
-        let html = '';
-        for (const modKey in appData.modules) {
-            const module = appData.modules[modKey];
-            html += `<div class="mb-2"><div class="px-2 pb-2 text-[11px] uppercase tracking-[0.2em] text-blue-100/55 font-semibold">${module.title}</div><div class="space-y-2">`;
-            module.sections.forEach(section => {
-                const isActive = activeModuleId === modKey && activeSectionId === section.id;
-                const activeClass = isActive ? `active-${module.color}` : 'text-white/82';
-                html += `
-                    <button onclick="navigateTo('${modKey}', '${section.id}')" class="nav-btn ${activeClass}">
-                      <div class="nav-icon ${isActive ? 'bg-slate-900/6 text-current' : ''}"><span class="material-symbols-outlined text-[18px]">${section.icon}</span></div>
-                      <div class="min-w-0">
-                        <div class="font-semibold leading-tight">${section.title}</div>
-                        <div class="text-xs mt-1 ${isActive ? 'opacity-75' : 'text-white/45'}">Interactive learning section</div>
-                      </div>
+    const state = quizPassedSessions.includes(currentSessionIdx) ? 'passed' : 'ready';
+
+    dom.chatContainer.innerHTML = `
+      <div class="max-w-3xl mx-auto fade-in pb-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-[10px] font-black uppercase tracking-wider mb-4">Assessment</div>
+        <h2 class="text-3xl font-black text-slate-900 tracking-tight leading-tight mb-8">Validate Clinical Reasoning</h2>
+        
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm mb-6">
+            <h4 class="text-lg font-bold text-slate-900 mb-5 leading-relaxed">${data.q}</h4>
+            <div class="grid gap-3" id="quiz-options-container">
+                ${data.choices.map((choice, idx) => `
+                    <button class="quiz-choice text-left p-4 rounded-xl font-medium text-slate-700 bg-slate-50 flex items-start gap-3 w-full" onclick="${state==='passed' ? '' : `selectQuizOption(${idx})`}" id="qo-${idx}">
+                        <span class="material-symbols-outlined mt-0.5 text-slate-400">radio_button_unchecked</span>
+                        <span>${choice}</span>
                     </button>
-                `;
-            });
-            html += `</div></div>`;
+                `).join('')}
+            </div>
+            
+            <div id="quiz-feedback" class="hidden mt-6 p-5 rounded-xl border fade-in"></div>
+        </div>
+      </div>
+    `;
+
+    if (state === 'passed') {
+        const opts = document.querySelectorAll('.quiz-choice');
+        opts.forEach(opt => opt.classList.add('cursor-default'));
+        const correctOpt = document.getElementById(`qo-${data.answer}`);
+        if(correctOpt) {
+            correctOpt.classList.add('correct');
+            correctOpt.querySelector('.material-symbols-outlined').textContent = 'check_circle';
+            correctOpt.querySelector('.material-symbols-outlined').classList.replace('text-slate-400', 'text-green-600');
         }
-        container.innerHTML = html;
-        updateProgress();
+        
+        const fb = document.getElementById('quiz-feedback');
+        fb.classList.remove('hidden');
+        fb.classList.add('bg-green-50', 'border-green-200', 'text-green-800');
+        fb.innerHTML = `<div class="font-black mb-1 flex items-center gap-2"><span class="material-symbols-outlined">check_circle</span> Correct</div><p class="text-sm font-medium">${data.explanation}</p>`;
+        
+        dom.interactionArea.innerHTML = `<button class="w-full py-4 bg-green-600 text-white font-bold rounded-xl shadow-md hover:bg-green-700 transition-all flex items-center justify-center gap-2" onclick="finishSession()">Continue to Next Session <span class="material-symbols-outlined">arrow_forward</span></button>`;
+    } else {
+        dom.interactionArea.innerHTML = `<button class="w-full py-4 bg-slate-200 text-slate-400 font-bold rounded-xl transition-all" id="btn-submit-quiz" disabled>Submit Answer</button>`;
     }
+  }
 
-    function updateProgress() {
-      const percent = getProgressPercent();
-      const index = getSectionIndex(activeModuleId, activeSectionId) + 1;
-      const total = getAllSections().length;
-      const fill = document.getElementById('progress-fill');
-      const text = document.getElementById('progress-text');
-      if (fill) fill.style.width = `${percent}%`;
-      if (text) text.textContent = `${index} / ${total}`;
-    }
+  window.selectQuizOption = function(idx) {
+      document.querySelectorAll('.quiz-choice').forEach((el, i) => {
+          el.classList.remove('selected');
+          el.querySelector('.material-symbols-outlined').textContent = 'radio_button_unchecked';
+          el.querySelector('.material-symbols-outlined').classList.replace('text-blue-600', 'text-slate-400');
+          if(i === idx) {
+              el.classList.add('selected');
+              el.querySelector('.material-symbols-outlined').textContent = 'radio_button_checked';
+              el.querySelector('.material-symbols-outlined').classList.replace('text-slate-400', 'text-blue-600');
+          }
+      });
+      const btn = document.getElementById('btn-submit-quiz');
+      if (btn) {
+        btn.disabled = false;
+        btn.classList.replace('bg-slate-200', 'bg-navy');
+        btn.classList.replace('text-slate-400', 'text-white');
+        btn.classList.add('shadow-md', 'hover:bg-slate-800');
+        btn.onclick = () => evaluateQuiz(idx);
+      }
+  }
 
-    function renderMainContent() {
-        const module = appData.modules[activeModuleId];
-        const section = module.sections.find(s => s.id === activeSectionId);
-        document.getElementById('breadcrumb-module').textContent = module.title;
-        document.getElementById('breadcrumb-section').textContent = section.title;
-        const contentContainer = document.getElementById('main-content');
-        contentContainer.innerHTML = `<div class="section-shell">${getSectionContent(activeModuleId, activeSectionId)}</div>`;
-        contentContainer.scrollTop = 0;
-        renderSidebar();
-        initClinicalVideos();
-        if (window.innerWidth < 768) { 
-            document.getElementById('sidebar').classList.add('-translate-x-full'); 
-            document.getElementById('sidebar-overlay').classList.add('hidden'); 
-        }
-    }
+  function evaluateQuiz(selectedIdx) {
+      const data = sessions[currentSessionIdx].quiz;
+      const isCorrect = selectedIdx === data.answer;
+      
+      const opts = document.querySelectorAll('.quiz-choice');
+      opts.forEach((opt, idx) => {
+          opt.onclick = null; 
+          opt.classList.remove('selected', 'cursor-pointer');
+          opt.classList.add('cursor-default');
+          
+          const icon = opt.querySelector('.material-symbols-outlined');
+          if (idx === data.answer) {
+              opt.classList.add('correct');
+              icon.textContent = 'check_circle';
+              icon.classList.replace('text-blue-600', 'text-green-600');
+              icon.classList.replace('text-slate-400', 'text-green-600');
+          } else if (idx === selectedIdx) {
+              opt.classList.add('incorrect');
+              icon.textContent = 'cancel';
+              icon.classList.replace('text-blue-600', 'text-red-500');
+          }
+      });
 
-    function navigateTo(modId, secId) { activeModuleId = modId; activeSectionId = secId; renderMainContent(); }
+      const fb = document.getElementById('quiz-feedback');
+      fb.classList.remove('hidden');
+      if (isCorrect) {
+          if (!quizPassedSessions.includes(currentSessionIdx)) quizPassedSessions.push(currentSessionIdx);
+          if (!completedSessions.includes(currentSessionIdx)) completedSessions.push(currentSessionIdx);
+          
+          fb.classList.add('bg-green-50', 'border-green-200', 'text-green-800');
+          fb.innerHTML = `<div class="font-black mb-1 flex items-center gap-2"><span class="material-symbols-outlined">check_circle</span> Correct!</div><p class="text-sm font-medium">${data.explanation}</p>`;
+          dom.interactionArea.innerHTML = `<button class="w-full py-4 bg-green-600 text-white font-bold rounded-xl shadow-md hover:bg-green-700 transition-all flex items-center justify-center gap-2" onclick="finishSession()">Complete Session <span class="material-symbols-outlined">task_alt</span></button>`;
+      } else {
+          fb.classList.add('bg-red-50', 'border-red-200', 'text-red-800');
+          fb.innerHTML = `<div class="font-black mb-1 flex items-center gap-2"><span class="material-symbols-outlined">cancel</span> Incorrect</div><p class="text-sm font-medium">Please review the content and try again.</p>`;
+          dom.interactionArea.innerHTML = `<button class="w-full py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-all" onclick="renderCompetenceTab()">Retry Question</button>`;
+      }
+      renderSessionList();
+  }
+
+  window.finishSession = function() {
+      if (currentSessionIdx < sessions.length - 1) {
+          loadSession(currentSessionIdx + 1);
+      } else {
+          switchTab('resources');
+          setTimeout(() => alert('Masterclass Complete! You have earned 1.5 CME Credits.'), 100);
+      }
+  }
+
+  function renderResourcesTab() {
+    dom.chatContainer.innerHTML = `
+      <div class="max-w-3xl mx-auto fade-in pb-8">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-200 text-slate-700 text-[10px] font-black uppercase tracking-wider mb-4">Evidence Base</div>
+        <h2 class="text-3xl font-black text-slate-900 tracking-tight leading-tight mb-8">Case Support Materials</h2>
+        
+        <div class="grid gap-4">
+            <div class="resource-card flex items-start gap-5 p-6 rounded-[1.6rem] hover:border-blue-300 transition-colors cursor-pointer group">
+<div>
+                <div class="font-black text-slate-900 text-lg mb-1">HRR Mutation Testing Guidelines</div>
+                <div class="text-sm font-medium text-slate-600 mb-2">Current recommendations for biomarker testing in mPC.</div>
+                <div class="text-[10px] font-bold uppercase tracking-widest text-blue-500">Clinical Guideline</div>
+              </div>
+            </div>
+            
+            <div class="resource-card flex items-start gap-5 p-6 rounded-[1.6rem] hover:border-blue-300 transition-colors cursor-pointer group">
+<div>
+                <div class="font-black text-slate-900 text-lg mb-1">Mechanism of Action: PARPis</div>
+                <div class="text-sm font-medium text-slate-600 mb-2">Visual aid explaining synthetic lethality for patient education.</div>
+                <div class="text-[10px] font-bold uppercase tracking-widest text-blue-500">Patient Resource</div>
+              </div>
+            </div>
+
+            <div class="resource-card flex items-start gap-5 p-6 rounded-[1.6rem] hover:border-blue-300 transition-colors cursor-pointer group">
+<div>
+                <div class="font-black text-slate-900 text-lg mb-1">Toxicity Management Protocol</div>
+                <div class="text-sm font-medium text-slate-600 mb-2">Dose modification algorithms for PARPi-induced anemia.</div>
+                <div class="text-[10px] font-bold uppercase tracking-widest text-blue-500">Clinical Tool</div>
+              </div>
+            </div>
+        </div>
+      </div>
+    `;
+    dom.interactionArea.innerHTML = `<button class="w-full py-4 rounded-xl border-2 border-slate-200 bg-white font-bold text-sm uppercase tracking-wider text-slate-700 hover:bg-slate-50 transition-colors" type="button" onclick="switchTab('content')">Return to Briefing</button>`;
+  }
+
+  // --- INIT ---
+  document.addEventListener('DOMContentLoaded', () => {
+    // Populate dom
+    dom.sidebar = document.getElementById('sidebar');
+    dom.overlay = document.getElementById('sidebar-overlay');
+    dom.sessionList = document.getElementById('session-list');
+    dom.avatar = document.getElementById('avatar-image');
+    dom.clinicalOverlay = document.getElementById('clinical-overlay');
+    dom.clinicalImg = document.getElementById('clinical-image');
+    dom.clinicalTitle = document.getElementById('clinical-title');
+    dom.clinicalDesc = document.getElementById('clinical-desc');
+    dom.ptName = document.getElementById('patient-name');
+    dom.ptDemo = document.getElementById('patient-demographics');
+    dom.ptVibe = document.getElementById('vibe-badge');
+    dom.ptComplaint = document.getElementById('patient-complaint');
+    dom.ptDuration = document.getElementById('patient-duration');
+    dom.ptRx = document.getElementById('patient-rx');
+    dom.ptMindset = document.getElementById('patient-mindset');
+    dom.chatContainer = document.getElementById('chat-container');
+    dom.interactionArea = document.getElementById('interaction-area');
+    dom.progressBar = document.getElementById('progress-bar');
+    dom.progressText = document.getElementById('progress-text');
+    dom.moduleTabs = document.querySelectorAll('.module-tab');
+    dom.completionModal = document.getElementById('completion-modal');
+    dom.modalTakeaway = document.getElementById('modal-takeaway');
+    dom.modalContent = document.getElementById('modal-content');
     
-    function toggleSidebar() { 
-        const sidebar = document.getElementById('sidebar'); 
-        const overlay = document.getElementById('sidebar-overlay'); 
-        if (sidebar.classList.contains('-translate-x-full')) { 
-            sidebar.classList.remove('-translate-x-full'); 
-            overlay.classList.remove('hidden'); 
-        } else { 
-            sidebar.classList.add('-translate-x-full'); 
-            overlay.classList.add('hidden'); 
-        } 
-    }
+    // Wire up events
+    document.getElementById('btn-menu').addEventListener('click', toggleSidebar);
+    document.getElementById('btn-close').addEventListener('click', toggleSidebar);
+    dom.overlay.addEventListener('click', toggleSidebar);
     
-    window.selectQuizOption = function(qid, idx) { 
-        if (!quizStates[qid]) quizStates[qid] = { submitted: false }; 
-        quizStates[qid].selected = idx; 
-        renderMainContent(); 
-    }
+    document.getElementById('btn-examine').addEventListener('click', toggleExamine);
+    document.getElementById('btn-return').addEventListener('click', toggleExamine);
     
-    window.submitQuiz = function(qid, idx) { 
-        if (!quizStates[qid]) return; 
-        quizStates[qid].submitted = true; 
-        renderMainContent(); 
-    }
+    const btnNext = document.getElementById('btn-next');
+    if (btnNext) btnNext.addEventListener('click', window.closeModalAndAssess);
+    
+    dom.moduleTabs.forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
 
-
-    document.addEventListener('DOMContentLoaded', () => { renderMainContent(); });
+    loadSession(0);
+  });
 </script>
-
 </body>
 </html>
