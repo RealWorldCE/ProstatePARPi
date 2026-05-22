@@ -727,6 +727,24 @@
   // --- DOM CACHE ---
   const dom = {};
 
+  function resetStageScroll(behavior = 'auto') {
+    const scrollTarget = dom.chatContainer || document.getElementById('chat-container');
+
+    requestAnimationFrame(() => {
+      if (scrollTarget) {
+        scrollTarget.scrollTo({ top: 0, behavior });
+        scrollTarget.scrollTop = 0;
+      }
+
+      // Safety fallback for browsers/layouts where the outer page is scrollable.
+      window.scrollTo({ top: 0, behavior });
+    });
+  }
+
+  function scrollAssessmentToTop() {
+    resetStageScroll('smooth');
+  }
+
   // --- CORE FUNCTIONS ---
   function toggleSidebar() {
     const isClosed = dom.sidebar.classList.contains('-translate-x-full');
@@ -844,6 +862,9 @@
     else if (tabName === 'consult') renderConsultTab();
     else if (tabName === 'competence') renderCompetenceTab();
     else if (tabName === 'resources') renderResourcesTab();
+
+    // Reset the main content window whenever a new tab/session view is rendered.
+    resetStageScroll('auto');
   }
 
   function renderContentTab() {
@@ -1111,13 +1132,16 @@
           dom.interactionArea.innerHTML = `<button class="w-full py-4 bg-slate-900 text-white font-bold rounded-xl shadow-md hover:bg-slate-800 transition-all" onclick="renderCompetenceTab()">Retry Question</button>`;
       }
       renderSessionList();
+      scrollAssessmentToTop();
   }
 
   window.finishSession = function() {
       if (currentSessionIdx < sessions.length - 1) {
           loadSession(currentSessionIdx + 1);
+          resetStageScroll('auto');
       } else {
           switchTab('resources');
+          resetStageScroll('auto');
           setTimeout(() => alert('Masterclass Complete! You have earned 1.5 CME Credits.'), 100);
       }
   }
